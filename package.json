@@ -1,0 +1,13 @@
+{
+  "name": "musemelody-demo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MuseMelody demo page for score-to-improvisation generation on Cloudflare Pages.",
+  "scripts": {
+    "dev": "wrangler pages dev public --compatibility-date=2026-04-13",
+    "deploy": "wrangler pages deploy public --project-name musemelody"
+  },
+  "devDependencies": {
+    "wrangler": "^4.11.1"
+  }
+}
