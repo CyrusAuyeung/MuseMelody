@@ -1,18 +1,15 @@
 :root {
   --bg: #08121c;
-  --bg-2: #0d1722;
   --surface: rgba(11, 21, 33, 0.86);
-  --surface-2: rgba(255, 255, 255, 0.92);
-  --surface-3: rgba(255, 255, 255, 0.06);
+  --surface-light: rgba(255, 255, 255, 0.92);
   --line: rgba(255, 255, 255, 0.08);
-  --line-2: rgba(11, 21, 33, 0.08);
+  --line-dark: rgba(11, 21, 33, 0.08);
   --text: #f4f7fb;
-  --text-2: #0e1b27;
+  --text-dark: #0e1b27;
   --muted: rgba(232, 239, 245, 0.72);
-  --muted-2: #61707f;
+  --muted-dark: #61707f;
   --accent: #2cd2b6;
   --accent-2: #72a9ff;
-  --accent-3: rgba(44, 210, 182, 0.14);
   --radius-xl: 32px;
   --radius-lg: 24px;
   --radius-md: 18px;
@@ -110,6 +107,7 @@ a {
 .value-card h3,
 .business-card h3,
 .roadmap-card h3,
+.faq-card h3,
 .cta-band h2 {
   font-family: "Sora", sans-serif;
 }
@@ -212,10 +210,18 @@ button {
   margin-bottom: 30px;
 }
 
-.hero-metrics {
+.hero-metrics,
+.trust-strip,
+.value-grid,
+.roadmap-grid,
+.template-grid,
+.faq-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: 14px;
+}
+
+.hero-metrics {
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .metric-card,
@@ -223,6 +229,8 @@ button {
 .value-card,
 .business-card,
 .roadmap-card,
+.template-card,
+.faq-card,
 .card-dark,
 .card-light,
 .cta-band {
@@ -230,9 +238,18 @@ button {
   box-shadow: var(--shadow-xl);
 }
 
+.metric-card,
+.trust-card,
+.value-card,
+.business-card,
+.roadmap-card,
+.template-card,
+.faq-card {
+  border: 1px solid var(--line);
+}
+
 .metric-card {
   padding: 18px 18px 20px;
-  border: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.04);
 }
 
@@ -360,7 +377,8 @@ button {
 }
 
 .mini-tags span,
-.tag {
+.tag,
+.template-tag {
   display: inline-flex;
   align-items: center;
   padding: 10px 14px;
@@ -394,22 +412,21 @@ button {
 .preview-wave-bar--7 { height: 32%; }
 
 .trust-strip {
-  display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
   margin-top: 28px;
 }
 
 .trust-card {
   padding: 18px;
   background: rgba(255, 255, 255, 0.045);
-  border: 1px solid var(--line);
 }
 
 .value-section,
+.templates-section,
 .business-section,
 .demo-shell,
-.roadmap-shell {
+.roadmap-shell,
+.faq-section {
   margin-top: 72px;
 }
 
@@ -443,18 +460,17 @@ button {
 }
 
 .value-grid,
-.roadmap-grid {
-  display: grid;
+.roadmap-grid,
+.faq-grid {
   grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
 }
 
 .value-card,
 .roadmap-card,
-.business-card {
+.business-card,
+.faq-card {
   padding: 26px;
   background: rgba(255, 255, 255, 0.045);
-  border: 1px solid var(--line);
 }
 
 .value-index {
@@ -467,7 +483,8 @@ button {
 
 .value-card h3,
 .roadmap-card h3,
-.business-card h3 {
+.business-card h3,
+.faq-card h3 {
   margin: 0 0 12px;
   font-size: 1.48rem;
   line-height: 1.2;
@@ -476,10 +493,47 @@ button {
 
 .value-card p,
 .roadmap-card p,
-.business-card p {
+.business-card p,
+.faq-card p {
   margin: 0;
   color: var(--muted);
   line-height: 1.78;
+}
+
+.template-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.template-card {
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.045);
+  text-align: left;
+  color: var(--text);
+}
+
+.template-card strong {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+}
+
+.template-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.72;
+}
+
+.template-tag {
+  margin-bottom: 14px;
+  background: rgba(44, 210, 182, 0.14);
+  color: #c9fff6;
+  font-size: 0.88rem;
+}
+
+.template-card:hover,
+.template-card:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
 }
 
 .business-section {
@@ -528,8 +582,8 @@ button {
 
 .card-light {
   padding: 26px;
-  background: var(--surface-2);
-  color: var(--text-2);
+  background: var(--surface-light);
+  color: var(--text-dark);
   border: 1px solid rgba(255, 255, 255, 0.6);
   box-shadow: var(--shadow-lg);
 }
@@ -567,7 +621,7 @@ button {
 }
 
 .input-block > span {
-  color: var(--muted-2);
+  color: var(--muted-dark);
 }
 
 .upload-block input {
@@ -581,7 +635,7 @@ textarea,
 select {
   width: 100%;
   border-radius: 20px;
-  border: 1px solid var(--line-2);
+  border: 1px solid var(--line-dark);
   background: rgba(255, 255, 255, 0.9);
 }
 
@@ -605,7 +659,7 @@ select {
 textarea,
 select {
   padding: 16px 18px;
-  color: var(--text-2);
+  color: var(--text-dark);
   font-family: inherit;
 }
 
@@ -642,7 +696,7 @@ input[type="range"] {
   padding: 12px 16px;
   border-radius: 999px;
   background: rgba(11, 21, 33, 0.06);
-  color: var(--muted-2);
+  color: var(--muted-dark);
   border: 1px solid rgba(11, 21, 33, 0.08);
 }
 
@@ -685,8 +739,8 @@ input[type="range"] {
 
 .card-light .ghost-button {
   background: rgba(11, 21, 33, 0.06);
-  color: var(--text-2);
-  border: 1px solid var(--line-2);
+  color: var(--text-dark);
+  border: 1px solid var(--line-dark);
 }
 
 .primary-button--link,
@@ -699,7 +753,7 @@ input[type="range"] {
 .result-summary {
   margin: 0 0 18px;
   line-height: 1.75;
-  color: var(--muted-2);
+  color: var(--muted-dark);
 }
 
 .subpanel {
@@ -720,7 +774,7 @@ input[type="range"] {
 .subpanel-head span,
 #request-id,
 .next-steps {
-  color: var(--muted-2);
+  color: var(--muted-dark);
 }
 
 .tag-board {
@@ -774,7 +828,7 @@ input[type="range"] {
   border-radius: 12px;
   background: rgba(11, 21, 33, 0.06);
   border: 1px solid rgba(11, 21, 33, 0.08);
-  color: var(--text-2);
+  color: var(--text-dark);
 }
 
 .empty-state {
@@ -782,7 +836,7 @@ input[type="range"] {
   display: grid;
   place-items: center;
   text-align: center;
-  color: var(--muted-2);
+  color: var(--muted-dark);
   border: 1px dashed rgba(11, 21, 33, 0.14);
   border-radius: 18px;
 }
@@ -814,17 +868,6 @@ input[type="range"] {
   margin: 0;
   padding-left: 18px;
   line-height: 1.85;
-}
-
-.roadmap-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-}
-
-.roadmap-card--current {
-  border-color: rgba(44, 210, 182, 0.2);
-  background: linear-gradient(180deg, rgba(44, 210, 182, 0.12), rgba(255, 255, 255, 0.04));
 }
 
 .cta-band {
@@ -870,7 +913,9 @@ input[type="range"] {
   .hero-metrics,
   .trust-strip,
   .value-grid,
+  .template-grid,
   .roadmap-grid,
+  .faq-grid,
   .slider-grid {
     grid-template-columns: 1fr;
   }
@@ -907,8 +952,10 @@ input[type="range"] {
   .metric-card,
   .trust-card,
   .value-card,
+  .template-card,
   .business-card,
   .roadmap-card,
+  .faq-card,
   .cta-band {
     padding: 20px;
     border-radius: 24px;

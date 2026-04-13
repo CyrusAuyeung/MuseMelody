@@ -13,6 +13,7 @@ const styleHidden = document.querySelector("#selected-style");
 const outputHidden = document.querySelector("#selected-output");
 const styleChooser = document.querySelector("#style-chooser");
 const outputChooser = document.querySelector("#output-chooser");
+const templateCards = document.querySelectorAll("[data-template-prompt]");
 
 const resultTitle = document.querySelector("#result-title");
 const resultSummary = document.querySelector("#result-summary");
@@ -52,6 +53,12 @@ const updateSelectableGroup = (container, hiddenInput, dataKey) => {
     button.classList.add("chip--selected");
     hiddenInput.value = button.dataset[dataKey];
   });
+};
+
+const selectChipByValue = (container, dataKey, value) => {
+  for (const chip of container.querySelectorAll(".chip")) {
+    chip.classList.toggle("chip--selected", chip.dataset[dataKey] === value);
+  }
 };
 
 const createLocalResponse = (payload) => {
@@ -288,6 +295,19 @@ playButton.addEventListener("click", playPreview);
 fileInput.addEventListener("change", () => {
   fileLabel.textContent = fileInput.files[0]?.name || "拖入文件或点击选择乐谱";
 });
+
+for (const templateCard of templateCards) {
+  templateCard.addEventListener("click", () => {
+    document.querySelector("#prompt").value = templateCard.dataset.templatePrompt || "";
+    barsInput.value = templateCard.dataset.templateBars || barsInput.value;
+    temperatureInput.value = templateCard.dataset.templateTemperature || temperatureInput.value;
+    densityInput.value = templateCard.dataset.templateDensity || densityInput.value;
+    styleHidden.value = templateCard.dataset.templateStyle || styleHidden.value;
+    selectChipByValue(styleChooser, "style", styleHidden.value);
+    syncRanges();
+    form.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
 
 barsInput.addEventListener("input", syncRanges);
 temperatureInput.addEventListener("input", syncRanges);
