@@ -68,7 +68,7 @@ function buildResponse(payload) {
   return {
     requestId: `mm-${Date.now().toString(36)}`,
     title: `${styleLabel} 风格旋律草稿`,
-    overview: `已根据 ${payload.inputType || "text"} 输入生成 ${bars} 小节 ${styleLabel} 风格片段。当前为 Public Beta 演示结果，用来展示 MuseMelody 的产品流程、旋律轮廓与试听体验。`,
+    overview: `已根据 ${payload.inputType || "text"} 输入生成 ${bars} 小节 ${styleLabel} 风格片段。你可以直接查看和声建议、旋律轮廓与试听结果，并继续调整生成方向。`,
     bpm: 88 + Math.round(random() * 36),
     harmony: Array.from({ length: Math.max(4, Math.ceil(bars / 2)) }, (_, index) => {
       return style.chords[(index + Math.floor(random() * 2)) % style.chords.length];
@@ -76,9 +76,9 @@ function buildResponse(payload) {
     phrases,
     waveform: Array.from({ length: 20 }, () => 0.15 + random() * 0.82),
     nextSteps: [
-      "上传后直接解析乐谱结构与旋律动机。",
-      "接入真实旋律与和声生成模型。",
-      "增加 MusicXML、MIDI 与音频导出能力。"
+      "导出当前旋律片段。",
+      "继续生成下一段发展。",
+      "切换风格重新比较结果。"
     ]
   };
 }
