@@ -68,7 +68,7 @@ function buildResponse(payload) {
   return {
     requestId: `mm-${Date.now().toString(36)}`,
     title: `${styleLabel} 风格旋律草稿`,
-    overview: `已根据 ${payload.inputType || "text"} 输入生成 ${bars} 小节 ${styleLabel} 风格片段。当前为公开体验版演示结果，用来展示 MuseMelody 的生成流程、旋律轮廓与试听方式。`,
+    overview: `已根据 ${payload.inputType || "text"} 输入生成 ${bars} 小节 ${styleLabel} 风格片段。当前为 Public Beta 演示结果，用来展示 MuseMelody 的产品流程、旋律轮廓与试听体验。`,
     bpm: 88 + Math.round(random() * 36),
     harmony: Array.from({ length: Math.max(4, Math.ceil(bars / 2)) }, (_, index) => {
       return style.chords[(index + Math.floor(random() * 2)) % style.chords.length];

@@ -107,7 +107,7 @@ const createLocalResponse = (payload) => {
   return {
     requestId: `local-${Date.now().toString(36)}`,
     title: `${payload.style} 风格旋律草稿`,
-    overview: `已根据 ${payload.inputType} 输入生成 ${bars} 小节 ${payload.style} 风格片段。当前结果为公开体验版演示数据，用来展示 MuseMelody 的生成流程与试听方式。`,
+    overview: `已根据 ${payload.inputType} 输入生成 ${bars} 小节 ${payload.style} 风格片段。当前结果为 Public Beta 演示输出，用来展示 MuseMelody 的产品流程、旋律组织方式与试听体验。`,
     bpm: 88 + Math.round(randomFromSeed() * 36),
     harmony: Array.from({ length: Math.max(4, Math.ceil(bars / 2)) }, (_, index) => {
       return profile.chords[(index + Math.floor(randomFromSeed() * 2)) % profile.chords.length];

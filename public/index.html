@@ -11,319 +11,402 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Sora:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
     <script type="module" src="./app.js" defer></script>
   </head>
   <body>
-    <div class="page-shell">
-      <header class="topbar">
-        <div class="brand-lockup">
-          <p class="eyebrow">MuseMelody</p>
-          <h1>把一段乐谱，继续写成新的旋律。</h1>
-        </div>
-        <nav class="topbar-meta">
-          <a class="meta-pill" href="#how-it-works">产品说明</a>
-          <a class="meta-pill" href="#live-demo">在线体验</a>
-          <a class="meta-pill meta-pill--accent" href="#live-demo">立即试用</a>
+    <div class="site-frame">
+      <header class="site-header">
+        <a class="brand" href="#top" aria-label="MuseMelody 首页">
+          <span class="brand-mark"></span>
+          <span class="brand-copy">
+            <strong>MuseMelody</strong>
+            <small>Score-to-Improv Studio</small>
+          </span>
+        </a>
+
+        <nav class="site-nav" aria-label="主导航">
+          <a href="#product-value">产品价值</a>
+          <a href="#use-cases">应用场景</a>
+          <a href="#live-demo">在线体验</a>
+          <a href="#roadmap">路线图</a>
         </nav>
+
+        <div class="header-actions">
+          <span class="status-chip">Public Beta</span>
+          <a class="ghost-button ghost-button--link" href="#live-demo">试用工作台</a>
+        </div>
       </header>
 
-      <main>
-        <section class="public-hero">
-          <article class="hero-copy card card--hero card--hero-main">
-            <p class="section-tag">公开体验版</p>
-            <p class="hero-lead hero-lead--large">
-              MuseMelody 面向想要继续扩写旋律的人：你可以从既有乐谱、MIDI、MusicXML 或一段文字描述出发，生成新的和声与即兴旋律草稿，并直接在网页里试听。
-            </p>
+      <main class="page-shell" id="top">
+        <section class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">AI Music Product / Tech &amp; Business</p>
+            <h1>把既有乐谱变成可以继续创作、试听和展示的下一段旋律。</h1>
             <p class="hero-support">
-              这不是只给研究人员看的技术页，而是一个让作曲、编曲、练耳、灵感草拟都能马上上手的生成入口。
+              MuseMelody 把“从已有旋律继续发展”做成一个真正面向公开用户的网页产品。它既可以服务作曲与编曲场景，也适合课程展示、概念验证和后续模型商业化落地。
             </p>
+
             <div class="hero-actions">
-              <a class="primary-button primary-button--link" href="#live-demo">开始生成</a>
-              <a class="ghost-button ghost-button--link" href="#how-it-works">了解它能做什么</a>
+              <a class="primary-button primary-button--link" href="#live-demo">立即生成一段</a>
+              <a class="ghost-button ghost-button--link" href="#product-value">查看产品价值</a>
             </div>
+
             <div class="hero-metrics">
-              <div>
-                <span>适合输入</span>
-                <strong>乐谱、MIDI、图片、文字</strong>
-              </div>
-              <div>
-                <span>生成内容</span>
-                <strong>旋律走向、和声草稿、试听片段</strong>
-              </div>
-              <div>
-                <span>当前版本</span>
-                <strong>公开 demo，可交互体验</strong>
-              </div>
-            </div>
-          </article>
-
-          <aside class="card story-panel">
-            <p class="section-tag">为什么做这个</p>
-            <h2>给“有乐感，但不一定每次都有灵感”的创作者一个入口</h2>
-            <p>
-              你可以把它理解成一个旋律续写器：保留原有动机和风格方向，再往前推进几小节，而不是从空白开始硬写。
-            </p>
-            <ul class="story-list">
-              <li>给编曲和作曲时卡住的人，一个更快的起稿方式</li>
-              <li>给初学者，一个能理解“旋律怎么接下去”的试听体验</li>
-              <li>给项目展示和答辩，一个可直接打开演示的网页入口</li>
-            </ul>
-          </aside>
-        </section>
-
-        <section class="card audience-strip">
-          <div>
-            <p class="section-tag">适合谁</p>
-            <h2>不是只能给技术团队演示，也可以直接给普通访问者使用</h2>
-          </div>
-          <div class="audience-tags">
-            <span class="tag tag--audience">作曲 / 编曲</span>
-            <span class="tag tag--audience">音乐学习</span>
-            <span class="tag tag--audience">灵感草拟</span>
-            <span class="tag tag--audience">课程展示</span>
-            <span class="tag tag--audience">Demo 体验</span>
-          </div>
-        </section>
-
-        <section id="how-it-works" class="feature-grid">
-          <article class="card feature-card">
-            <p class="section-tag">输入</p>
-            <h3>从已有素材开始</h3>
-            <p>支持从乐谱、MusicXML、MIDI、图片扫描件，或者一段文字说明出发，而不是要求用户从零写起。</p>
-          </article>
-
-          <article class="card feature-card">
-            <p class="section-tag">生成</p>
-            <h3>给出可继续发展的旋律草稿</h3>
-            <p>系统会根据风格、长度、创造性和和声密度参数，返回新的旋律轮廓和和声走向。</p>
-          </article>
-
-          <article class="card feature-card">
-            <p class="section-tag">试听</p>
-            <h3>不只看结果，也能马上听</h3>
-            <p>生成结果可以在网页端试听和预览，方便快速判断这段思路要不要继续发展下去。</p>
-          </article>
-        </section>
-
-        <section class="hero-grid hero-grid--secondary">
-          <article class="hero-copy card card--hero">
-            <p class="section-tag">当前体验说明</p>
-            <p class="hero-lead">
-              当前线上版本已经完成前端交互、试听预览和接口占位，适合公开展示。正式版会继续接入卷积网络乐谱格式转化、Python 预处理服务，以及真实的旋律生成模型。
-            </p>
-            <div class="hero-notes">
-              <div>
-                <span>现在可以</span>
-                <strong>直接上手体验生成流程</strong>
-              </div>
-              <div>
-                <span>接下来会补</span>
-                <strong>真实模型输出与导出能力</strong>
-              </div>
-              <div>
-                <span>适合展示</span>
-                <strong>给老师、评审、用户、协作者看</strong>
-              </div>
-            </div>
-          </article>
-
-          <aside class="card status-panel">
-            <p class="section-tag">当前状态</p>
-            <ul class="status-list">
-              <li>
-                <span class="status-label">公开主页</span>
-                <strong>已面向普通访问者整理</strong>
-              </li>
-              <li>
-                <span class="status-label">交互 demo</span>
-                <strong>已可在线试用</strong>
-              </li>
-              <li>
-                <span class="status-label">生成接口</span>
-                <strong>Cloudflare Pages Function</strong>
-              </li>
-              <li>
-                <span class="status-label">模型阶段</span>
-                <strong>当前为演示数据，后续接入真实能力</strong>
-              </li>
-            </ul>
-          </aside>
-        </section>
-
-        <section id="live-demo" class="workspace-heading">
-          <div>
-            <p class="section-tag">Live Demo</p>
-            <h2>现场体验区</h2>
-          </div>
-          <p>
-            这里保留了完整的交互式工作台。普通访问者可以直接试，项目协作者也可以把它当作后续接模型时的前端壳层。
-          </p>
-        </section>
-        <section class="workspace-grid">
-          <form id="generator-form" class="card control-panel">
-            <div class="panel-head">
-              <div>
-                <p class="section-tag">输入与控制</p>
-                <h2>现在就试一段</h2>
-              </div>
-              <button type="submit" class="primary-button" id="generate-button">生成一段旋律</button>
-            </div>
-
-            <div class="form-grid">
-              <label class="input-block upload-block">
-                <span>乐谱输入</span>
-                <input id="score-file" type="file" accept=".musicxml,.xml,.mid,.midi,.png,.jpg,.jpeg,.pdf" />
-                <div class="upload-surface">
-                  <strong id="file-label">拖入文件或点击选择乐谱</strong>
-                  <small>当前版本先展示上传状态与生成流程，正式版会接入乐谱识别与解析。</small>
-                </div>
-              </label>
-
-              <label class="input-block">
-                <span>乐谱 / 场景描述</span>
-                <textarea
-                  id="prompt"
-                  rows="5"
-                  placeholder="例如：根据一段 C 大调钢琴主旋律，生成 8 小节带都市感、句尾留白的即兴旋律。"
-                >根据一段钢琴 lead sheet，生成 8 小节偏 city pop / neo-soul 的即兴旋律，保留原曲主音轮廓。</textarea>
-              </label>
-
-              <label class="input-block">
+              <article class="metric-card">
                 <span>输入格式</span>
-                <select id="input-type">
-                  <option value="musicxml">MusicXML / Lead Sheet</option>
-                  <option value="midi">MIDI</option>
-                  <option value="image">五线谱图片扫描</option>
-                  <option value="text">纯文字描述</option>
-                </select>
-              </label>
+                <strong>Score / MIDI / MusicXML / Text</strong>
+              </article>
+              <article class="metric-card">
+                <span>输出能力</span>
+                <strong>Harmony / Melody / Preview Audio</strong>
+              </article>
+              <article class="metric-card">
+                <span>商业定位</span>
+                <strong>创作工具 + 教学辅助 + Demo 打样</strong>
+              </article>
+            </div>
+          </div>
 
-              <div class="input-block">
-                <span>风格偏向</span>
-                <div class="chip-row" id="style-chooser">
-                  <button type="button" class="chip chip--selected" data-style="neo-soul">Neo Soul</button>
-                  <button type="button" class="chip" data-style="city-pop">City Pop</button>
-                  <button type="button" class="chip" data-style="jazz-waltz">Jazz Waltz</button>
-                  <button type="button" class="chip" data-style="film-score">Film Score</button>
-                </div>
-              </div>
+          <div class="hero-preview card-dark">
+            <div class="preview-topbar">
+              <span class="preview-pill">Session Preview</span>
+              <span class="preview-pill preview-pill--accent">neo-soul</span>
+            </div>
 
-              <label class="input-block range-block">
-                <span>小节长度 <strong id="bars-value">8</strong></span>
-                <input id="bars" type="range" min="4" max="16" step="2" value="8" />
-              </label>
-
-              <label class="input-block range-block">
-                <span>创造性 <strong id="temperature-value">0.64</strong></span>
-                <input id="temperature" type="range" min="0.2" max="0.95" step="0.01" value="0.64" />
-              </label>
-
-              <label class="input-block range-block">
-                <span>和声密度 <strong id="density-value">0.58</strong></span>
-                <input id="density" type="range" min="0.2" max="0.95" step="0.01" value="0.58" />
-              </label>
-
-              <div class="input-block">
-                <span>输出目标</span>
-                <div class="chip-row" id="output-chooser">
-                  <button type="button" class="chip chip--selected" data-output="score">乐谱预览</button>
-                  <button type="button" class="chip" data-output="midi">MIDI 导出</button>
-                  <button type="button" class="chip" data-output="audio">试听片段</button>
-                </div>
+            <div class="preview-sheet">
+              <div class="staff-lines"></div>
+              <div class="preview-notes">
+                <span class="preview-note preview-note--1"></span>
+                <span class="preview-note preview-note--2"></span>
+                <span class="preview-note preview-note--3"></span>
+                <span class="preview-note preview-note--4"></span>
+                <span class="preview-note preview-note--5"></span>
+                <span class="preview-note preview-note--6"></span>
               </div>
             </div>
 
-            <input id="selected-style" type="hidden" value="neo-soul" />
-            <input id="selected-output" type="hidden" value="score" />
-          </form>
-
-          <section class="card result-panel">
-            <div class="panel-head panel-head--result">
-              <div>
-                <p class="section-tag">输出结果</p>
-                <h2 id="result-title">等待你的第一段旋律</h2>
-              </div>
-              <button type="button" class="ghost-button" id="play-button" disabled>试听这一段</button>
-            </div>
-
-            <p id="result-summary" class="result-summary">
-              在当前公开体验版中，系统会先返回一组可试听的演示数据，帮助你理解 MuseMelody 的生成方式和交互流程。
-            </p>
-
-            <div class="result-grid">
-              <article class="subpanel">
-                <div class="subpanel-head">
-                  <h3>和声走向</h3>
-                  <span id="result-bpm">BPM --</span>
-                </div>
-                <div id="harmony-list" class="tag-board tag-board--large">
-                  <span class="tag">等待后端返回</span>
+            <div class="preview-grid">
+              <article class="preview-card">
+                <span class="preview-label">和声建议</span>
+                <div class="mini-tags">
+                  <span>Cmaj9</span>
+                  <span>Dm9</span>
+                  <span>G13</span>
+                  <span>Em7</span>
                 </div>
               </article>
 
-              <article class="subpanel">
-                <div class="subpanel-head">
-                  <h3>旋律片段</h3>
-                  <span id="request-id">request --</span>
-                </div>
-                <div id="phrase-list" class="phrase-list empty-state">
-                  提交参数后会在这里显示每个小节的旋律轮廓与音高信息。
+              <article class="preview-card">
+                <span class="preview-label">试听强度</span>
+                <div class="preview-wave">
+                  <span class="preview-wave-bar preview-wave-bar--1"></span>
+                  <span class="preview-wave-bar preview-wave-bar--2"></span>
+                  <span class="preview-wave-bar preview-wave-bar--3"></span>
+                  <span class="preview-wave-bar preview-wave-bar--4"></span>
+                  <span class="preview-wave-bar preview-wave-bar--5"></span>
+                  <span class="preview-wave-bar preview-wave-bar--6"></span>
+                  <span class="preview-wave-bar preview-wave-bar--7"></span>
                 </div>
               </article>
 
-              <article class="subpanel">
-                <div class="subpanel-head">
-                  <h3>音频预览波形</h3>
-                  <span>browser synth</span>
-                </div>
-                <div id="waveform" class="waveform"></div>
-              </article>
-
-              <article class="subpanel">
-                <div class="subpanel-head">
-                  <h3>接下来会开放</h3>
-                  <span>coming next</span>
-                </div>
-                <ul id="next-steps" class="next-steps">
-                  <li>上传后直接解析乐谱结构</li>
-                  <li>接入真实旋律与和声生成模型</li>
-                  <li>支持 MIDI、音频和乐谱导出</li>
-                </ul>
+              <article class="preview-card preview-card--wide">
+                <span class="preview-label">产品价值</span>
+                <p>不是只做“生成一下”，而是把上传、控制、试听、展示整合成一条产品化工作流。</p>
               </article>
             </div>
-          </section>
+          </div>
         </section>
 
-        <section class="pipeline-grid">
-          <article class="card pipeline-card">
-            <p class="section-tag">Step 01</p>
-            <h3>理解你的输入</h3>
-            <p>
-              先把五线谱图片、扫描件或结构化乐谱转成后续系统可处理的数据格式，保留旋律和节奏线索。
-            </p>
+        <section class="trust-strip">
+          <article class="trust-card">
+            <span>适用场景</span>
+            <strong>创作起稿、课程展示、内容实验</strong>
           </article>
+          <article class="trust-card">
+            <span>目标用户</span>
+            <strong>创作者、学生、老师、音乐团队</strong>
+          </article>
+          <article class="trust-card">
+            <span>当前形态</span>
+            <strong>可公开访问的产品体验版</strong>
+          </article>
+          <article class="trust-card">
+            <span>部署架构</span>
+            <strong>GitHub + Cloudflare Pages</strong>
+          </article>
+        </section>
 
-          </section>
-            <p class="section-tag">Step 02</p>
-            <h3>生成新的发展方向</h3>
+        <section id="product-value" class="value-section">
+          <div class="section-heading">
+            <div>
+              <p class="section-tag">Product Value</p>
+              <h2>这不是一个技术说明页，而是一条可以被用户真正使用的音乐生成工作流。</h2>
+            </div>
             <p>
-              基于已有旋律轮廓、和声条件与风格参数，给出新的即兴片段、续写思路或和声走向草稿。
+              对 tech &amp; business 项目来说，用户不会先关心模型名字，他们更关心：能不能减少起稿成本、能不能快速验证创意、能不能形成可演示的产品体验。MuseMelody 的首页应该回答的就是这些问题。
             </p>
-          </article>
+          </div>
 
-          <article class="card pipeline-card">
-            <p class="section-tag">Step 03</p>
-            <h3>试听并决定要不要继续</h3>
+          <div class="value-grid">
+            <article class="value-card">
+              <p class="value-index">01</p>
+              <h3>从已有素材开始，而不是让用户面对空白页</h3>
+              <p>支持乐谱、MIDI、MusicXML、图片或文字描述作为起点，降低创作入口门槛。</p>
+            </article>
+
+            <article class="value-card">
+              <p class="value-index">02</p>
+              <h3>把参数控制做成产品能力，而不是模型参数堆叠</h3>
+              <p>用户可以理解长度、风格、创造性和和声密度，不需要先理解算法细节。</p>
+            </article>
+
+            <article class="value-card">
+              <p class="value-index">03</p>
+              <h3>把试听和预览前置，让结果能立刻被判断</h3>
+              <p>生成不是终点，快速试听、快速判断、快速修改才是实际产品体验里的关键步骤。</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="use-cases" class="business-section">
+          <div class="business-copy">
+            <p class="section-tag">Use Cases</p>
+            <h2>用产品语言讲清楚它适合谁、为什么值得用。</h2>
             <p>
-              在网页里预览、试听、调整参数，再决定这段旋律是否值得继续发展成完整作品。
+              商用产品感并不只是“大卡片 + 大标题”，而是页面能否让访问者迅速建立信任：知道自己能获得什么、在哪些场景下会真正用到，以及为什么这件事值得留在浏览器里继续操作。
             </p>
-          </article>
+            <ul class="check-list">
+              <li>适合作曲、编曲和灵感草拟场景</li>
+              <li>适合老师给学生演示旋律如何继续发展</li>
+              <li>适合在项目展示中作为真实可操作的产品原型</li>
+              <li>适合后续接入付费模型服务、导出功能和账号体系</li>
+            </ul>
+          </div>
+
+          <div class="business-stack">
+            <article class="business-card">
+              <p class="section-tag">Creator Workflow</p>
+              <h3>给创作者</h3>
+              <p>当你已经有一段主题、乐句或和声雏形时，可以快速得到下一段可继续发展的旋律草稿。</p>
+            </article>
+
+            <article class="business-card">
+              <p class="section-tag">Education</p>
+              <h3>给教学场景</h3>
+              <p>把“旋律接下来怎么写”这件事变成可视化、可试听、可讨论的课堂体验，而不是抽象讲解。</p>
+            </article>
+
+            <article class="business-card">
+              <p class="section-tag">Product Demo</p>
+              <h3>给项目展示</h3>
+              <p>页面本身已经具备产品原型的外观和交互逻辑，能用于答辩、展示、路演和后续继续迭代。</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="live-demo" class="demo-shell">
+          <div class="section-heading section-heading--tight">
+            <div>
+              <p class="section-tag">Live Demo</p>
+              <h2>在线体验生成工作台</h2>
+            </div>
+            <p>
+              这是当前最重要的产品交互区。它既要让普通用户愿意点进去试，也要让老师、评审和协作者看到完整可运行的产品雏形。
+            </p>
+          </div>
+
+          <div class="beta-notice">
+            <span class="beta-dot"></span>
+            当前为 Public Beta：前端体验、试听逻辑和 API 结构已上线，正式的乐谱解析与生成模型正在接入。
+          </div>
+
+          <div class="workspace-grid">
+            <form id="generator-form" class="control-panel card-light">
+              <div class="panel-head">
+                <div>
+                  <p class="section-tag">Session Builder</p>
+                  <h2>创建一次新的续写会话</h2>
+                </div>
+                <button type="submit" class="primary-button" id="generate-button">立即生成</button>
+              </div>
+
+              <div class="form-grid">
+                <label class="input-block upload-block">
+                  <span>上传乐谱文件</span>
+                  <input id="score-file" type="file" accept=".musicxml,.xml,.mid,.midi,.png,.jpg,.jpeg,.pdf" />
+                  <div class="upload-surface">
+                    <strong id="file-label">拖入文件或点击选择乐谱</strong>
+                    <small>支持 MusicXML、MIDI、图片扫描件等输入形式。当前版本先展示上传状态与生成流程。</small>
+                  </div>
+                </label>
+
+                <label class="input-block">
+                  <span>你希望它怎么继续写下去</span>
+                  <textarea
+                    id="prompt"
+                    rows="5"
+                    placeholder="例如：保留原曲主旋律轮廓，向后生成 8 小节更有都市感和律动感的旋律。"
+                  >根据一段钢琴 lead sheet，生成 8 小节偏 city pop / neo-soul 的即兴旋律，保留原曲主音轮廓。</textarea>
+                </label>
+
+                <label class="input-block">
+                  <span>输入格式</span>
+                  <select id="input-type">
+                    <option value="musicxml">MusicXML / Lead Sheet</option>
+                    <option value="midi">MIDI</option>
+                    <option value="image">五线谱图片扫描</option>
+                    <option value="text">纯文字描述</option>
+                  </select>
+                </label>
+
+                <div class="input-block">
+                  <span>风格方向</span>
+                  <div class="chip-row" id="style-chooser">
+                    <button type="button" class="chip chip--selected" data-style="neo-soul">Neo Soul</button>
+                    <button type="button" class="chip" data-style="city-pop">City Pop</button>
+                    <button type="button" class="chip" data-style="jazz-waltz">Jazz Waltz</button>
+                    <button type="button" class="chip" data-style="film-score">Film Score</button>
+                  </div>
+                </div>
+
+                <div class="slider-grid">
+                  <label class="input-block range-block">
+                    <span>生成长度 <strong id="bars-value">8</strong></span>
+                    <input id="bars" type="range" min="4" max="16" step="2" value="8" />
+                  </label>
+
+                  <label class="input-block range-block">
+                    <span>创造性 <strong id="temperature-value">0.64</strong></span>
+                    <input id="temperature" type="range" min="0.2" max="0.95" step="0.01" value="0.64" />
+                  </label>
+
+                  <label class="input-block range-block">
+                    <span>和声密度 <strong id="density-value">0.58</strong></span>
+                    <input id="density" type="range" min="0.2" max="0.95" step="0.01" value="0.58" />
+                  </label>
+                </div>
+
+                <div class="input-block">
+                  <span>输出目标</span>
+                  <div class="chip-row" id="output-chooser">
+                    <button type="button" class="chip chip--selected" data-output="score">乐谱预览</button>
+                    <button type="button" class="chip" data-output="midi">MIDI 导出</button>
+                    <button type="button" class="chip" data-output="audio">试听片段</button>
+                  </div>
+                </div>
+              </div>
+
+              <input id="selected-style" type="hidden" value="neo-soul" />
+              <input id="selected-output" type="hidden" value="score" />
+            </form>
+
+            <section class="result-panel card-light">
+              <div class="panel-head panel-head--result">
+                <div>
+                  <p class="section-tag">Result Preview</p>
+                  <h2 id="result-title">等待你的第一次生成</h2>
+                </div>
+                <button type="button" class="ghost-button" id="play-button" disabled>试听结果</button>
+              </div>
+
+              <p id="result-summary" class="result-summary">
+                生成完成后，这里会显示旋律草稿、和声方向和试听信息。当前公开版会返回一组演示数据，用来完整展示产品工作流。
+              </p>
+
+              <div class="result-grid">
+                <article class="subpanel">
+                  <div class="subpanel-head">
+                    <h3>和声走向</h3>
+                    <span id="result-bpm">BPM --</span>
+                  </div>
+                  <div id="harmony-list" class="tag-board tag-board--large">
+                    <span class="tag">等待结果生成</span>
+                  </div>
+                </article>
+
+                <article class="subpanel">
+                  <div class="subpanel-head">
+                    <h3>旋律片段</h3>
+                    <span id="request-id">session --</span>
+                  </div>
+                  <div id="phrase-list" class="phrase-list empty-state">
+                    提交参数后，这里会显示每个小节的旋律轮廓、音高与时值信息。
+                  </div>
+                </article>
+
+                <article class="subpanel">
+                  <div class="subpanel-head">
+                    <h3>试听波形</h3>
+                    <span>Preview Audio</span>
+                  </div>
+                  <div id="waveform" class="waveform"></div>
+                </article>
+
+                <article class="subpanel">
+                  <div class="subpanel-head">
+                    <h3>正式版能力</h3>
+                    <span>Next Release</span>
+                  </div>
+                  <ul id="next-steps" class="next-steps">
+                    <li>上传后直接解析乐谱结构</li>
+                    <li>接入真实旋律与和声生成模型</li>
+                    <li>支持 MIDI、音频和乐谱导出</li>
+                  </ul>
+                </article>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section id="roadmap" class="roadmap-shell">
+          <div class="section-heading section-heading--tight">
+            <div>
+              <p class="section-tag">Roadmap</p>
+              <h2>现在已经像产品，下一步把模型和导出能力接完整。</h2>
+            </div>
+            <p>
+              这页的目标不是伪装成已经全部完成，而是用商业产品的表达方式，清楚展示“今天能体验什么”和“下一阶段将如何扩展成真正可用的服务”。
+            </p>
+          </div>
+
+          <div class="roadmap-grid">
+            <article class="roadmap-card roadmap-card--current">
+              <p class="section-tag">Current</p>
+              <h3>产品外观、工作台交互、API 占位已上线</h3>
+              <p>目前已经具备公开访问、参数控制、试听预览和结果展示能力，足以承担首页展示和产品原型角色。</p>
+            </article>
+
+            <article class="roadmap-card">
+              <p class="section-tag">Next</p>
+              <h3>接入卷积网络乐谱解析与 Python 预处理</h3>
+              <p>把扫描乐谱、图片或结构化乐谱转换为模型可用的数据格式，完成输入层闭环。</p>
+            </article>
+
+            <article class="roadmap-card">
+              <p class="section-tag">Later</p>
+              <h3>接入旋律生成模型、导出与账号体系</h3>
+              <p>补齐真正的生成引擎、MIDI/音频导出和作品留存能力，把 demo 推进成可持续迭代的音乐产品。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="cta-band">
+          <div>
+            <p class="section-tag">Ready To Try</p>
+            <h2>现在就用一段已有素材，看看它能不能给你下一句旋律。</h2>
+          </div>
+          <a class="primary-button primary-button--link" href="#live-demo">进入工作台</a>
         </section>
       </main>
+
+      <footer class="site-footer">
+        <span>MuseMelody</span>
+        <span>Public Beta for Tech &amp; Business Project</span>
+      </footer>
     </div>
   </body>
 </html>
