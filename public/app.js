@@ -23,6 +23,10 @@ const nextSteps = document.querySelector("#next-steps");
 const bpmNode = document.querySelector("#result-bpm");
 const requestIdNode = document.querySelector("#request-id");
 
+const initialWaveformMarkup = Array.from({ length: 8 }, (_, index) => {
+  return `<span class="wave-bar wave-bar--${index + 1}"></span>`;
+}).join("");
+
 let latestResponse = null;
 let activeAudioContext = null;
 
@@ -102,8 +106,8 @@ const createLocalResponse = (payload) => {
 
   return {
     requestId: `local-${Date.now().toString(36)}`,
-    title: `${payload.style} demo improvisation`,
-    overview: `基于 ${payload.inputType} 输入，生成 ${bars} 小节 ${payload.style} 风格片段。当前结果为前后端联调用 mock 数据，但结构已对齐后续模型接口。`,
+    title: `${payload.style} 风格旋律草稿`,
+    overview: `已根据 ${payload.inputType} 输入生成 ${bars} 小节 ${payload.style} 风格片段。当前结果为公开体验版演示数据，用来展示 MuseMelody 的生成流程与试听方式。`,
     bpm: 88 + Math.round(randomFromSeed() * 36),
     harmony: Array.from({ length: Math.max(4, Math.ceil(bars / 2)) }, (_, index) => {
       return profile.chords[(index + Math.floor(randomFromSeed() * 2)) % profile.chords.length];
@@ -111,9 +115,9 @@ const createLocalResponse = (payload) => {
     phrases,
     waveform: Array.from({ length: 20 }, () => 0.15 + randomFromSeed() * 0.82),
     nextSteps: [
-      "接入 Python 模型服务，让乐谱解析结果直接进入生成接口。",
-      "将 mock note 数据替换成真实音高、时值、力度和和声标签。",
-      "根据输出模式增加 MusicXML、MIDI 和音频文件下载。"
+      "上传后直接解析乐谱结构与旋律动机。",
+      "接入真实旋律与和声生成模型。",
+      "增加 MusicXML、MIDI 与音频导出能力。"
     ]
   };
 };
@@ -275,7 +279,7 @@ form.addEventListener("submit", async (event) => {
   renderResult(response);
 
   generateButton.disabled = false;
-  generateButton.textContent = "生成 demo 片段";
+  generateButton.textContent = "生成一段旋律";
   form.classList.remove("is-loading");
 });
 
@@ -291,4 +295,5 @@ densityInput.addEventListener("input", syncRanges);
 
 updateSelectableGroup(styleChooser, styleHidden, "style");
 updateSelectableGroup(outputChooser, outputHidden, "output");
+waveform.innerHTML = initialWaveformMarkup;
 syncRanges();

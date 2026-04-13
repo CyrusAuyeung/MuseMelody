@@ -21,6 +21,13 @@ const STYLE_LIBRARY = {
   }
 };
 
+const STYLE_LABELS = {
+  "neo-soul": "Neo Soul",
+  "city-pop": "City Pop",
+  "jazz-waltz": "Jazz Waltz",
+  "film-score": "Film Score"
+};
+
 function createSeed(input) {
   return Array.from(input).reduce((total, char) => total + char.charCodeAt(0), 0) || 1;
 }
@@ -36,6 +43,7 @@ function createRandom(seedStart) {
 
 function buildResponse(payload) {
   const style = STYLE_LIBRARY[payload.style] || STYLE_LIBRARY["neo-soul"];
+  const styleLabel = STYLE_LABELS[payload.style] || "Neo Soul";
   const bars = Math.min(Math.max(Number(payload.bars) || 8, 4), 16);
   const random = createRandom(
     createSeed(`${payload.prompt}|${payload.inputType}|${payload.style}|${payload.temperature}|${payload.density}|${payload.fileName || "none"}`)
@@ -59,8 +67,8 @@ function buildResponse(payload) {
 
   return {
     requestId: `mm-${Date.now().toString(36)}`,
-    title: `${payload.style || "neo-soul"} generated sketch`,
-    overview: `已根据 ${payload.inputType || "text"} 输入生成 ${bars} 小节 demo 结果。当前由 Cloudflare Pages Function 返回占位数据，后续可以直接替换为真实模型、Python 服务或外部 AI API 的结果。`,
+    title: `${styleLabel} 风格旋律草稿`,
+    overview: `已根据 ${payload.inputType || "text"} 输入生成 ${bars} 小节 ${styleLabel} 风格片段。当前为公开体验版演示结果，用来展示 MuseMelody 的生成流程、旋律轮廓与试听方式。`,
     bpm: 88 + Math.round(random() * 36),
     harmony: Array.from({ length: Math.max(4, Math.ceil(bars / 2)) }, (_, index) => {
       return style.chords[(index + Math.floor(random() * 2)) % style.chords.length];
@@ -68,9 +76,9 @@ function buildResponse(payload) {
     phrases,
     waveform: Array.from({ length: 20 }, () => 0.15 + random() * 0.82),
     nextSteps: [
-      "把乐谱图片或 MusicXML 解析结果传给 Python 预处理服务。",
-      "接入旋律生成模型或外部 AI API，按当前 JSON 结构返回结果。",
-      "根据 outputMode 返回 MIDI、MusicXML 或音频文件地址。"
+      "上传后直接解析乐谱结构与旋律动机。",
+      "接入真实旋律与和声生成模型。",
+      "增加 MusicXML、MIDI 与音频导出能力。"
     ]
   };
 }
