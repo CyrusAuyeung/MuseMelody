@@ -39,6 +39,8 @@ function fallbackResponse(filename) {
 
 async function parseWithOpenAI(file, apiKey) {
   const normalizedApiKey = apiKey?.trim();
+  const apiBaseUrl = (globalThis.__MUSE_OPENAI_BASE_URL__ || "https://api.openai.com/v1").replace(/\/$/, "");
+  const modelName = globalThis.__MUSE_OPENAI_MODEL__ || "gpt-4o";
   const arrayBuffer = await file.arrayBuffer();
   const bytes = new Uint8Array(arrayBuffer);
   let binary = "";
@@ -59,14 +61,14 @@ async function parseWithOpenAI(file, apiKey) {
     "}"
   ].join("\n");
 
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+  const response = await fetch(`${apiBaseUrl}/chat/completions`, {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${normalizedApiKey}`,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      model: "gpt-4o",
+      model: modelName,
       temperature: 0,
       response_format: { type: "json_object" },
       messages: [
@@ -124,13 +126,16 @@ async function parseWithOpenAI(file, apiKey) {
     })),
     debug: {
       input_file: file.name || "uploaded-file",
-      parser: "openai-gpt-4o"
+      parser: `openai-compatible:${modelName}`,
+      base_url: apiBaseUrl
     },
     message: "乐谱识别完成。"
   };
 }
 
 export async function onRequestPost(context) {
+  globalThis.__MUSE_OPENAI_BASE_URL__ = context.env.OPENAI_BASE_URL || "https://api.openai.com/v1";
+  globalThis.__MUSE_OPENAI_MODEL__ = context.env.OPENAI_MODEL || "gpt-4o";
   const formData = await context.request.formData();
   const file = formData.get("file");
 
@@ -143,6 +148,8 @@ export async function onRequestPost(context) {
   if (!apiKey) {
     const fallback = fallbackResponse(file.name || "uploaded-file");
     fallback.debug.reason = "OPENAI_API_KEY is missing";
+    fallback.debug.base_url = globalThis.__MUSE_OPENAI_BASE_URL__;
+    fallback.debug.model = globalThis.__MUSE_OPENAI_MODEL__;
     return Response.json(fallback);
   }
 
@@ -155,6 +162,8 @@ export async function onRequestPost(context) {
     fallback.debug = {
       ...fallback.debug,
       parser: "fallback",
+      base_url: globalThis.__MUSE_OPENAI_BASE_URL__,
+      model: globalThis.__MUSE_OPENAI_MODEL__,
       reason: error instanceof Error ? error.message : "unknown-error"
     };
     return Response.json(fallback);
