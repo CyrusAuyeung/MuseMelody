@@ -1,229 +1,178 @@
 # MuseMelody
 
-MuseMelody 是一个面向“既有乐谱 -> 即兴旋律 / 和声生成”的网页 demo，当前版本已经部署到 Cloudflare Pages，可用于展示项目方向、前后端交互流程，以及后续接入深度学习模型或 AI API 的整体形态。
+MuseMelody 是一个面向公开用户的 AI 旋律续写与乐谱生成网站。
 
-这个仓库目前聚焦三个目标：
+当前站点已经不是早期的静态 demo，而是一个包含产品首页、内嵌成熟服务界面、同域名 API 和可构建前端工作台的完整网页项目。
 
-- 用网页形式展示乐谱生成类项目的可交互体验
-- 提前打通前端、接口、试听预览的基本链路
-- 为后续接入 Python 乐谱解析、旋律生成模型、音频生成服务预留稳定接口
+## 当前状态
 
-## 项目背景
+当前线上站点由两部分组成：
 
-MuseMelody 的核心想法是：
+1. 首页
+   负责产品展示、功能介绍、结果说明、FAQ，以及直接承载核心服务入口。
 
-1. 输入已有乐谱、lead sheet、MusicXML、MIDI，或者乐谱图片扫描件。
-2. 将乐谱内容转换成模型可以处理的数据格式。
-3. 基于深度学习模型、卷积网络识别结果或外部 AI API，生成新的即兴旋律与和声片段。
-4. 在网页端完成结果预览、试听、参数调节与后续导出。
+2. 成熟服务界面
+   真实的旋律生成工作台已经嵌入首页，同时保留独立构建产物在 `public/studio/` 下，供站点内部复用。
 
-当前仓库提供的是可运行的 demo 版本，重点在网页交互和接口结构，不是最终模型系统。
+## 当前功能
 
-## 当前已实现
+网站当前支持：
 
-- 已部署的 Cloudflare Pages 前端页面
-- 可交互的生成工作台
-- 风格、长度、创造性、和声密度等控制项
-- Cloudflare Pages Functions 后端占位接口
-- mock 旋律 / 和声数据返回
-- 基于浏览器 Web Audio 的试听 demo
+- 输入既有旋律
+- 上传乐谱图片进行占位识别
+- 手动键盘录入音高与时值
+- 选择风格、音色、速度与长度
+- 生成新的旋律片段
+- 试听原旋律、生成旋律与合并结果
+- 导出 MIDI 文件
 
-## 当前未实现
-
-- 正式的卷积网络乐谱识别流程
-- Python 数据预处理服务
-- 真正的旋律生成模型推理
-- 音频文件导出、MIDI 导出、MusicXML 导出
-- 用户系统、作品存档、历史记录
-
-## 技术结构
-
-### 前端
-
-- 原生 HTML / CSS / JavaScript
-- 单页交互式工作台
-- 浏览器内 Web Audio 简单试听
-
-### 后端
-
-- Cloudflare Pages Functions
-- 当前接口路径：`/api/generate`
-- 当前返回 mock 数据，后续可以替换为真实模型服务代理
-
-### 部署
-
-- GitHub 仓库托管
-- Cloudflare Pages 自动部署
-- 可绑定自定义域名
-
-## 目录结构
+## 项目结构
 
 ```text
 public/
-  index.html        前端主页面
-  styles.css        页面样式
-  app.js            页面交互、请求逻辑、试听逻辑
+  index.html              产品首页
+  styles.css              首页样式
+  studio/                 成熟服务的构建产物
 functions/
   api/
-    generate.js     Cloudflare Pages Function，返回 demo 数据
-package.json        项目脚本与依赖
-wrangler.toml       Wrangler 配置
+    score/parse.js        乐谱图片解析接口（当前为可运行占位流程）
+    improv/generate.js    旋律生成接口
+    midi/export.js        MIDI 导出接口
+program/
+  Musemelody/
+    frontend/             真实服务前端源码（Vite + React）
+    backend/              原始 Python/FastAPI 版本参考
+    inspiration-muse.jsx  原始主组件来源
+scripts/
+  build-studio.mjs        将成熟服务构建并注入首页的脚本
+package.json
+wrangler.toml
 ```
 
-## 本地运行
+## 运行方式
 
-### 1. 安装依赖
+### 1. 安装根项目依赖
 
 ```bash
 npm install
 ```
 
-### 2. 启动本地开发环境
+### 2. 安装成熟服务前端依赖
+
+```bash
+cd program/Musemelody/frontend
+npm install
+```
+
+### 3. 构建成熟服务
+
+```bash
+cd ../../..
+npm run build:studio
+```
+
+这个命令会做两件事：
+
+1. 构建 `program/Musemelody/frontend`
+2. 将产物复制到 `public/studio/`
+3. 自动把嵌入脚本注入 `public/index.html`
+
+### 4. 本地启动 Cloudflare Pages
 
 ```bash
 npm run dev
 ```
 
-启动后，Wrangler 会在本地提供：
+如果你希望本地先自动重建成熟服务再启动站点，也可以使用：
 
-- 静态页面
-- Cloudflare Pages Functions
-- `/api/generate` 本地接口
+```bash
+npm run build:studio
+npm run dev
+```
+
+## 当前 API
+
+网站当前实际使用的接口为：
+
+### `POST /api/score/parse`
+
+接收上传图片，返回识别到的音符数据。
+
+当前是可运行占位流程，返回示例旋律，用于打通前后端链路。
+
+### `POST /api/improv/generate`
+
+输入：
+
+- `notes`
+- `style`
+- `bars`
+- `tempo`
+
+输出：
+
+- `analysis`
+- `improvisation`
+
+当前生成逻辑是规则式 / Markov 风格的可运行实现，适合在网页中展示完整服务流程。
+
+### `POST /api/midi/export`
+
+输入音符列表与速度，返回 MIDI 文件下载流。
 
 ## 部署方式
 
-本项目适合使用 GitHub + Cloudflare Pages 的方式部署。
+当前项目适合部署到 Cloudflare Pages。
 
-### Cloudflare Pages 推荐配置
+推荐配置：
 
 - Framework preset: `None`
 - Build command: 留空
 - Build output directory: `public`
 
-Cloudflare 会自动识别 `functions` 目录，并将 [functions/api/generate.js](functions/api/generate.js) 作为 Pages Function 发布。
+注意：
 
-### 命令行部署
-
-如果已经配置 Wrangler 账号，也可以直接执行：
+每次更新 `program/Musemelody/frontend` 后，最好先执行：
 
 ```bash
-npm run deploy
+npm run build:studio
 ```
 
-当前脚本定义见 [package.json](package.json)。
+然后再提交和部署，这样首页中嵌入的成熟服务脚本才会更新。
 
-## 页面功能说明
+## 代码说明
 
-当前 demo 页面支持以下交互：
+### 首页相关
 
-1. 上传乐谱文件占位
-2. 输入乐谱 / 场景描述
-3. 选择输入格式
-4. 选择生成风格
-5. 调节小节长度、创造性、和声密度
-6. 选择输出目标
-7. 请求后端生成 demo 数据
-8. 查看和声、旋律片段与波形预览
-9. 点击试听 demo 片段
+- [public/index.html](public/index.html)
+- [public/styles.css](public/styles.css)
 
-主页面代码在 [public/index.html](public/index.html)、[public/styles.css](public/styles.css)、[public/app.js](public/app.js)。
+### 成熟服务源码
 
-## API 约定
+- [program/Musemelody/frontend/src/InspirationMuse.jsx](program/Musemelody/frontend/src/InspirationMuse.jsx)
+- [program/Musemelody/frontend/src/App.jsx](program/Musemelody/frontend/src/App.jsx)
+- [program/Musemelody/frontend/src/embed.jsx](program/Musemelody/frontend/src/embed.jsx)
+- [program/Musemelody/frontend/vite.config.js](program/Musemelody/frontend/vite.config.js)
 
-当前后端接口为：
+### 站内 API
 
-### `POST /api/generate`
+- [functions/api/score/parse.js](functions/api/score/parse.js)
+- [functions/api/improv/generate.js](functions/api/improv/generate.js)
+- [functions/api/midi/export.js](functions/api/midi/export.js)
 
-请求体示例：
+## 后续可继续优化的方向
 
-```json
-{
-  "prompt": "根据一段钢琴 lead sheet 生成 8 小节 neo-soul 风格即兴旋律",
-  "inputType": "musicxml",
-  "style": "neo-soul",
-  "outputMode": "score",
-  "bars": 8,
-  "temperature": 0.64,
-  "density": 0.58,
-  "fileName": "demo.musicxml"
-}
-```
-
-返回体结构示例：
-
-```json
-{
-  "requestId": "mm-xxxxxx",
-  "title": "neo-soul generated sketch",
-  "overview": "...",
-  "bpm": 96,
-  "harmony": ["Cmaj9", "Dm9", "G13", "Em7"],
-  "phrases": [
-    {
-      "bar": 1,
-      "contour": "lift",
-      "notes": [
-        { "pitch": "C4", "duration": 0.5 },
-        { "pitch": "E4", "duration": 0.5 }
-      ],
-      "motif": "C4/0.5 · E4/0.5"
-    }
-  ],
-  "waveform": [0.24, 0.46, 0.31],
-  "nextSteps": [
-    "把乐谱图片或 MusicXML 解析结果传给 Python 预处理服务。"
-  ]
-}
-```
-
-接口实现位置见 [functions/api/generate.js](functions/api/generate.js)。
-
-## 后续接真实模型的推荐路线
-
-### 路线一：Cloudflare 仅做前端 + API 网关
-
-适合情况：
-
-- 真正的模型运行在 Python 服务中
-- 需要 CUDA、PyTorch、TensorFlow 或其他较重依赖
-- 需要处理文件上传、乐谱解析、音频生成
-
-建议做法：
-
-1. 前端继续留在 Cloudflare Pages。
-2. `functions/api/generate.js` 改为代理接口。
-3. Cloudflare Function 调用外部 Python 服务。
-4. Python 服务返回标准化 JSON，前端保持不变。
-
-### 路线二：外部 AI API 生成
-
-适合情况：
-
-- 短期内先做功能展示
-- 用第三方生成服务替代自训模型
-
-建议做法：
-
-1. 保留当前页面交互。
-2. 在 `functions/api/generate.js` 中接入外部 API。
-3. 将外部响应整理为当前页面所需结构。
-
-## 下一步建议
-
-如果你要把这个项目继续推进成可汇报、可答辩、可继续开发的版本，优先级建议如下：
-
-1. 接入真实的乐谱解析服务
-2. 明确统一的旋律生成返回格式
-3. 补上 MIDI / MusicXML 导出
-4. 增加作品保存与历史记录
-5. 增加更完整的项目介绍页和团队说明
+1. 将当前乐谱图片识别占位流程替换为真实 OMR 模型
+2. 将当前规则式生成替换为真实深度学习推理服务
+3. 为成熟服务增加历史记录、模板库、结果版本比较与导出状态反馈
+4. 进一步统一首页和服务界面的设计语言
 
 ## 说明
 
-当前仓库是 demo 与前端交互骨架，不代表最终模型效果。它的价值主要在于：
+仓库中 `program/Musemelody/backend/` 仍保留原始 Python/FastAPI 版本，主要作为参考实现。
 
-- 已经完成展示层和交互层
-- 已经有可以上线的站点结构
-- 已经把后续模型接入点提前定好
+当前线上版本实际运行的是：
 
-后续无论你接的是卷积网络乐谱识别、深度学习旋律生成，还是 AI API，都可以沿着现有接口继续扩展。
+- Cloudflare Pages 静态前端
+- Cloudflare Functions API
+- 嵌入首页的成熟服务构建产物

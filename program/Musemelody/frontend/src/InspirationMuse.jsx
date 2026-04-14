@@ -498,6 +498,7 @@ export default function InspirationMuse({ embedded = false }) {
   const [customNotes, setCustomNotes] = useState([]);
   const [selectedDuration, setSelectedDuration] = useState(1);
   const [uploadHint, setUploadHint] = useState("");
+  const fileInputRef = useRef(null);
   const audioRef = useRef(new AudioEngine());
   const durationToLabel = useCallback((duration) => {
     const matched = DURATION_OPTIONS.find(opt => opt.value === duration);
@@ -650,7 +651,7 @@ export default function InspirationMuse({ embedded = false }) {
     app: {
       minHeight: embedded ? "auto" : "100vh",
       background: embedded ? "transparent" : "linear-gradient(170deg, #0a0612 0%, #110b20 40%, #0d1025 70%, #080510 100%)",
-      color: "#e0d8f0",
+      color: embedded ? "#f2ebff" : "#e0d8f0",
       fontFamily: "'Cormorant Garamond', Georgia, serif",
       padding: embedded ? "0" : "24px 16px",
       position: "relative",
@@ -678,18 +679,19 @@ export default function InspirationMuse({ embedded = false }) {
       textTransform: "uppercase",
     },
     section: {
-      background: "rgba(255,255,255,0.03)",
-      borderRadius: 16,
-      padding: 24,
+      background: embedded ? "rgba(255,255,255,0.07)" : "rgba(255,255,255,0.03)",
+      borderRadius: embedded ? 24 : 16,
+      padding: embedded ? 28 : 24,
       marginBottom: 20,
-      border: "1px solid rgba(255,255,255,0.06)",
+      border: embedded ? "1px solid rgba(255,255,255,0.12)" : "1px solid rgba(255,255,255,0.06)",
       backdropFilter: "blur(20px)",
+      boxShadow: embedded ? "0 18px 40px rgba(0,0,0,0.18)" : "none",
     },
     sectionTitle: {
-      fontSize: 18,
+      fontSize: embedded ? 21 : 18,
       fontWeight: 600,
       marginBottom: 16,
-      color: "#c9a0ff",
+      color: embedded ? "#f4ecff" : "#c9a0ff",
       letterSpacing: 2,
     },
     btn: (active = false, accent = "#c9a0ff") => ({
@@ -697,7 +699,7 @@ export default function InspirationMuse({ embedded = false }) {
       borderRadius: 8,
       border: active ? `1px solid ${accent}` : "1px solid rgba(255,255,255,0.1)",
       background: active ? `${accent}22` : "rgba(255,255,255,0.04)",
-      color: active ? accent : "#b0a8c8",
+      color: active ? accent : embedded ? "#d5cde7" : "#b0a8c8",
       cursor: "pointer",
       fontSize: 14,
       fontFamily: "'Cormorant Garamond', serif",
@@ -733,8 +735,8 @@ export default function InspirationMuse({ embedded = false }) {
       padding: "10px 14px",
       borderRadius: 8,
       border: "1px solid rgba(255,255,255,0.1)",
-      background: "rgba(255,255,255,0.04)",
-      color: "#e0d8f0",
+      background: "rgba(255,255,255,0.06)",
+      color: "#f4ecff",
       fontSize: 14,
       fontFamily: "monospace",
       outline: "none",
@@ -767,6 +769,33 @@ export default function InspirationMuse({ embedded = false }) {
       color: "#c8c0d8",
       maxHeight: 300,
       overflowY: "auto",
+    },
+    fileShell: {
+      display: "flex",
+      alignItems: "center",
+      gap: 14,
+      flexWrap: "wrap",
+      padding: "14px 16px",
+      borderRadius: 12,
+      border: "1px solid rgba(255,255,255,0.12)",
+      background: "rgba(255,255,255,0.05)",
+    },
+    fileButton: {
+      padding: "10px 16px",
+      borderRadius: 10,
+      border: "1px solid rgba(201,160,255,0.32)",
+      background: "linear-gradient(135deg, rgba(201,160,255,0.24), rgba(126,184,255,0.18))",
+      color: "#f5efff",
+      fontFamily: "inherit",
+      fontSize: 14,
+      fontWeight: 600,
+      letterSpacing: 0.5,
+      cursor: "pointer",
+    },
+    fileName: {
+      fontSize: 13,
+      color: "#ddd5ee",
+      opacity: 0.92,
     },
   };
 
@@ -803,7 +832,7 @@ export default function InspirationMuse({ embedded = false }) {
         * { box-sizing: border-box; }
       `}</style>
 
-      <div style={{ position: "relative", zIndex: 1, maxWidth: 800, margin: "0 auto" }}>
+      <div style={{ position: "relative", zIndex: 1, maxWidth: embedded ? 1120 : 800, margin: "0 auto" }}>
         {/* Header */}
         {!embedded && (
           <header style={css.header}>
@@ -817,11 +846,11 @@ export default function InspirationMuse({ embedded = false }) {
 
         {/* ═══ INPUT SECTION ═══ */}
         <section style={css.section}>
-          <h2 style={css.sectionTitle}>⟐ 輸入旋律</h2>
+          <h2 style={css.sectionTitle}>⟐ 输入旋律</h2>
 
           {/* Input mode tabs */}
           <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
-            {[["piano","鍵盤輸入"], ["upload", "圖片識別"]].map(([mode, label]) => (
+            {[["piano", "键盘输入"], ["upload", "图片识别"]].map(([mode, label]) => (
               <button key={mode} style={css.pill(inputMode === mode)}
                 onClick={() => setInputMode(mode)}>{label}</button>
             ))}
@@ -888,7 +917,7 @@ export default function InspirationMuse({ embedded = false }) {
                 <span style={{ fontSize: 12, color: "#8880a0" }}>
                   {customNotes.length ? customNotes.map(n => `${midiToName(n.midi)}:${durationToLabel(n.duration)}`).join("  ") : "点击琴键录入音高与标准时值（当前覆盖 C3-B6）"}
                 </span>
-                <button style={css.btn(false)} onClick={loadCustomNotes}>載入</button>
+                <button style={css.btn(false)} onClick={loadCustomNotes}>载入</button>
                 <button style={css.btn(false)} onClick={() => setCustomNotes(customNotes.slice(0, -1))}>撤销</button>
                 <button style={css.btn(false)} onClick={() => setCustomNotes([])}>清除</button>
               </div>
@@ -899,11 +928,21 @@ export default function InspirationMuse({ embedded = false }) {
           {inputMode === "upload" && (
             <div>
               <p style={{ fontSize: 12, color: "#8880a0", marginBottom: 8 }}>
-                上传五线谱/六线谱图片，通过后端 OMR 接口转换为旋律数据（当前版本为可运行占位模型）。
+                上传五线谱或六线谱图片，系统会先将其转换为可用于续写的旋律数据。
               </p>
-              <input type="file" accept="image/*"
-                onChange={e => handleImageUpload(e.target.files?.[0])}
-                style={{ ...css.input, padding: "8px 10px", fontFamily: "inherit" }} />
+              <div style={css.fileShell}>
+                <button type="button" style={css.fileButton} onClick={() => fileInputRef.current?.click()}>
+                  选择图片
+                </button>
+                <span style={css.fileName}>{uploadHint || "支持 PNG、JPG 等常见图片格式"}</span>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={e => handleImageUpload(e.target.files?.[0])}
+                  style={{ display: "none" }}
+                />
+              </div>
               {uploadHint && <p style={{ fontSize: 12, color: "#a098b8", marginTop: 8 }}>{uploadHint}</p>}
             </div>
           )}
@@ -919,13 +958,13 @@ export default function InspirationMuse({ embedded = false }) {
 
         {/* ═══ PARAMETERS ═══ */}
         <section style={css.section}>
-          <h2 style={css.sectionTitle}>⟐ 生成參數</h2>
+          <h2 style={css.sectionTitle}>⟐ 生成参数</h2>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
             {/* Style */}
             <div>
               <label style={{ fontSize: 13, color: "#a098b8", display: "block", marginBottom: 6 }}>生成风格</label>
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                {[["jazz","爵士"], ["blues","藍調"], ["classical","古典"], ["experimental","實驗"]].map(([s, l]) => (
+                {[ ["jazz","爵士"], ["blues","蓝调"], ["classical","古典"], ["experimental","实验"] ].map(([s, l]) => (
                   <button key={s} style={css.pill(style === s)} onClick={() => setStyle(s)}>{l}</button>
                 ))}
               </div>
@@ -934,7 +973,7 @@ export default function InspirationMuse({ embedded = false }) {
             <div>
               <label style={{ fontSize: 13, color: "#a098b8", display: "block", marginBottom: 6 }}>音色</label>
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                {[["piano","鋼琴"], ["synth","合成器"], ["organ","風琴"], ["strings","弦樂"]].map(([t, l]) => (
+                {[ ["piano","钢琴"], ["synth","合成器"], ["organ","风琴"], ["strings","弦乐"] ].map(([t, l]) => (
                   <button key={t} style={css.pill(timbre === t)} onClick={() => setTimbre(t)}>{l}</button>
                 ))}
               </div>
@@ -947,7 +986,7 @@ export default function InspirationMuse({ embedded = false }) {
             </div>
             {/* Bars */}
             <div>
-              <label style={{ fontSize: 13, color: "#a098b8" }}>生成小節數: {bars}</label>
+              <label style={{ fontSize: 13, color: "#a098b8" }}>生成小节数: {bars}</label>
               <input type="range" min={4} max={16} value={bars}
                 onChange={e => setBars(+e.target.value)} style={css.slider} />
             </div>

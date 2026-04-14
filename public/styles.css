@@ -535,15 +535,15 @@ button {
 }
 
 .demo-shell--embedded {
-  padding: 32px;
+  padding: 36px;
   border-radius: var(--radius-xl);
-  background: rgba(255, 255, 255, 0.035);
-  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: var(--shadow-xl);
 }
 
 .embedded-studio-host {
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
 .workspace-grid {
