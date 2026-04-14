@@ -3,4 +3,17 @@ node_modules/
 *.log
 Group2Project.docx
 artifacts/
+*.zip
+
+# Extracted program junk and caches
+program/__MACOSX/
+**/.DS_Store
+**/__pycache__/
+**/*.pyc
+*.swp
+*.swo
+
+# Nested dependency and env folders
+program/Musemelody/backend/.venv/
+program/Musemelody/frontend/node_modules/
 
