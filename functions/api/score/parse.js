@@ -29,7 +29,9 @@ function fallbackResponse(filename) {
     })),
     detected: FALLBACK_NOTES,
     debug: {
-      input_file: filename
+      input_file: filename,
+      parser: "fallback",
+      mode: "placeholder"
     },
     message: "当前为可运行占位识别流程。若配置了 AI 识别密钥，可自动尝试真实图片识别。"
   };
@@ -131,7 +133,9 @@ export async function onRequestPost(context) {
   const apiKey = context.env.OPENAI_API_KEY;
 
   if (!apiKey) {
-    return Response.json(fallbackResponse(file.name || "uploaded-file"));
+    const fallback = fallbackResponse(file.name || "uploaded-file");
+    fallback.debug.reason = "OPENAI_API_KEY is missing";
+    return Response.json(fallback);
   }
 
   try {
