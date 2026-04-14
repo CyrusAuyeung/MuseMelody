@@ -570,7 +570,9 @@ export default function InspirationMuse({ embedded = false }) {
         setImprovisation([]);
         setApiAnalysis("");
         const parserMode = data?.debug?.parser === "openai-gpt-4o" ? "AI 识别" : "占位识别";
-        const parserReason = data?.debug?.reason ? ` 原因：${data.debug.reason}` : "";
+        const parserReason = data?.debug?.reason
+          ? ` 原因：${String(data.debug.reason).slice(0, 180)}`
+          : "";
         setUploadHint(data.message || "已成功载入旋律内容。");
         setToast(`图片识别完成，旋律内容已载入。当前使用：${parserMode}。${parserReason}`);
       } else {

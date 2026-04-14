@@ -38,6 +38,7 @@ function fallbackResponse(filename) {
 }
 
 async function parseWithOpenAI(file, apiKey) {
+  const normalizedApiKey = apiKey?.trim();
   const arrayBuffer = await file.arrayBuffer();
   const bytes = new Uint8Array(arrayBuffer);
   let binary = "";
@@ -61,7 +62,7 @@ async function parseWithOpenAI(file, apiKey) {
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${apiKey}`,
+      "Authorization": `Bearer ${normalizedApiKey}`,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
@@ -86,7 +87,8 @@ async function parseWithOpenAI(file, apiKey) {
   });
 
   if (!response.ok) {
-    throw new Error(`OpenAI request failed: ${response.status}`);
+    const errorText = await response.text();
+    throw new Error(`OpenAI request failed: ${response.status} ${errorText}`);
   }
 
   const data = await response.json();
@@ -130,7 +132,7 @@ export async function onRequestPost(context) {
     return Response.json({ detail: "missing file" }, { status: 400 });
   }
 
-  const apiKey = context.env.OPENAI_API_KEY;
+  const apiKey = context.env.OPENAI_API_KEY?.trim();
 
   if (!apiKey) {
     const fallback = fallbackResponse(file.name || "uploaded-file");
