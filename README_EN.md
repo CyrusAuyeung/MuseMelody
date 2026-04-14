@@ -1,0 +1,183 @@
+# MuseMelody
+
+[简体中文](README.md) | [English](README_EN.md)
+
+> An AI melody continuation and score-to-improvisation workspace for public users.
+
+MuseMelody is a web product designed to help users continue writing from existing musical material.
+
+Users can start from scores, MIDI, MusicXML, images, or text prompts, then generate new melodic continuations, harmony suggestions, and previewable results in a single interface.
+
+## Product Overview
+
+A lot of music creation does not start from a blank page.
+
+MuseMelody is built for workflows such as:
+
+- continuing an existing melody
+- exploring new directions from a current theme
+- comparing multiple continuation ideas quickly
+- previewing, adjusting, and exporting results directly in the browser
+
+## Current Experience
+
+The current online version already provides a complete product flow:
+
+1. Input melody
+   Start from score images, keyboard input, preset melodies, or text prompts.
+
+2. Adjust parameters
+   Control style, timbre, tempo, and output length.
+
+3. Generate results
+   Receive melodic continuation, harmony suggestions, and rhythm-related output.
+
+4. Preview and export
+   Listen to the original melody, generated melody, merged playback, and export MIDI.
+
+## Core Capabilities
+
+- Melody continuation and improvisation generation
+- Harmony direction suggestions
+- Placeholder score-image parsing flow
+- In-browser audio preview
+- MIDI export
+- Embedded studio experience directly inside the homepage
+
+## User Flow
+
+```mermaid
+flowchart LR
+    A[Input or upload melody] --> B[Adjust style and parameters]
+    B --> C[Generate continuation]
+    C --> D[Review harmony and melody]
+    D --> E[Preview and compare]
+    E --> F[Export MIDI or iterate again]
+```
+
+## Site Architecture
+
+```mermaid
+flowchart TB
+    U[User] --> H[Homepage]
+    H --> S[Embedded Studio]
+    S --> P[Score Parse API]
+    S --> G[Improvisation API]
+    S --> M[MIDI Export API]
+    P --> F[Cloudflare Functions]
+    G --> F
+    M --> F
+```
+
+## Repository Structure
+
+```text
+public/
+  index.html              Product homepage
+  styles.css              Homepage styles
+  studio/                 Built studio assets embedded into the homepage
+functions/
+  api/
+    score/parse.js        Score parsing endpoint
+    improv/generate.js    Melody generation endpoint
+    midi/export.js        MIDI export endpoint
+program/
+  Musemelody/
+    frontend/             Main studio frontend source (Vite + React)
+    backend/              Original Python/FastAPI reference implementation
+scripts/
+  build-studio.mjs        Builds the studio and injects it into the homepage
+```
+
+## Key Files
+
+### Product homepage
+
+- [public/index.html](public/index.html)
+- [public/styles.css](public/styles.css)
+
+### Studio source
+
+- [program/Musemelody/frontend/src/InspirationMuse.jsx](program/Musemelody/frontend/src/InspirationMuse.jsx)
+- [program/Musemelody/frontend/src/App.jsx](program/Musemelody/frontend/src/App.jsx)
+- [program/Musemelody/frontend/src/embed.jsx](program/Musemelody/frontend/src/embed.jsx)
+- [program/Musemelody/frontend/vite.config.js](program/Musemelody/frontend/vite.config.js)
+
+### Site APIs
+
+- [functions/api/score/parse.js](functions/api/score/parse.js)
+- [functions/api/improv/generate.js](functions/api/improv/generate.js)
+- [functions/api/midi/export.js](functions/api/midi/export.js)
+
+## Local Development
+
+### 1. Install root dependencies
+
+```bash
+npm install
+```
+
+### 2. Install studio frontend dependencies
+
+```bash
+cd program/Musemelody/frontend
+npm install
+```
+
+### 3. Build the embedded studio
+
+```bash
+cd ../../..
+npm run build:studio
+```
+
+### 4. Start the local site
+
+```bash
+npm run dev
+```
+
+## Deployment
+
+This project is designed for Cloudflare Pages.
+
+Recommended configuration:
+
+- Framework preset: `None`
+- Build command: leave empty
+- Build output directory: `public`
+
+Whenever you update the studio frontend source under `program/Musemelody/frontend/`, rebuild it before deployment:
+
+```bash
+npm run build:studio
+```
+
+## Current Implementation Notes
+
+The current online version uses:
+
+- Cloudflare Pages static frontend
+- Cloudflare Pages Functions APIs
+- Embedded studio build output injected into the homepage
+
+The original [program/Musemelody/backend](program/Musemelody/backend) remains in the repository as a Python/FastAPI reference implementation.
+
+## Roadmap
+
+Potential next steps include:
+
+- Replacing the current placeholder score parsing with a real OMR model
+- Replacing the current rule-based continuation logic with real model inference
+- Adding generation history and version comparison
+- Improving playback, export, and feedback states
+- Adding user accounts and project persistence
+
+## Repository Policy
+
+This repository is not released as open source software.
+
+Please see:
+
+- [LICENSE](LICENSE)
+- [NOTICE](NOTICE)

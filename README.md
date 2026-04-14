@@ -1,182 +1,185 @@
 # MuseMelody
 
-> AI melody continuation and score-to-improvisation workspace for generating, previewing, and exporting new musical ideas from existing material.
+[简体中文](README.md) | [English](README_EN.md)
 
-MuseMelody 是一个面向公开用户的 AI 旋律续写与乐谱生成网站。
+> 面向公开用户的 AI 旋律续写与乐谱生成工作台。
 
-它帮助用户从已有乐谱、MIDI、MusicXML 或文字描述出发，生成新的旋律片段、和声建议与试听结果，并在同一界面里完成输入、生成、试听和导出。
+MuseMelody 是一个帮助用户基于已有旋律继续创作的网站。
 
-## Why MuseMelody
+用户可以从乐谱、MIDI、MusicXML、图片或文字描述出发，生成新的旋律片段、和声建议与试听结果，并在同一界面里完成输入、生成、试听和导出。
 
-创作并不总是从空白页开始。
+## 产品简介
 
-很多时候，真正的需求不是“从零写一首歌”，而是：
+很多音乐创作并不是从空白页开始，而是从一段已经存在的旋律继续发展。
 
-- 给出一段已有旋律，再往下写
-- 为一段现有主题找新的发展方向
+MuseMelody 当前主要服务这类场景：
+
+- 给一段已有旋律继续往下写
+- 为现有主题寻找新的发展方向
 - 快速比较不同版本的旋律走向
-- 在网页里直接试听、调整和导出结果
+- 在网页里直接试听、调整与导出结果
 
-MuseMelody 就是围绕这个动作设计的产品。
+## 当前体验
 
-## What It Does
+当前线上版本已经具备完整的产品流程：
 
-当前版本支持：
+1. 输入旋律
+   支持乐谱图片、键盘录入、预设旋律或文字描述。
 
-- 从乐谱、MIDI、MusicXML、图片或文字描述开始
-- 使用键盘录入旋律音高与时值
-- 选择风格、音色、速度和生成长度
-- 生成新的旋律片段与和声建议
-- 试听原旋律、生成旋律与合并结果
-- 导出 MIDI 文件
-- 在首页中直接使用成熟服务界面
+2. 调整参数
+   支持设置风格、音色、速度与生成长度。
 
-## Product Experience
+3. 生成结果
+   返回新的旋律片段、和声建议与节奏信息。
 
-MuseMelody 当前的产品结构包括两层：
+4. 试听与导出
+   支持试听原旋律、生成旋律、合并结果，并导出 MIDI 文件。
 
-1. 产品首页
-   负责产品定位、能力说明、结果展示和 FAQ。
+## 核心能力
 
-2. 成熟服务工作台
-   负责真正的旋律输入、生成、试听和导出流程，并已经嵌入首页。
+- 旋律续写与即兴生成
+- 和声方向建议
+- 乐谱图片输入占位识别
+- 网页内即时试听
+- MIDI 导出
+- 首页内嵌成熟工作台体验
 
-## User Flow
+## 使用流程
 
 ```mermaid
 flowchart LR
-    A[Upload or input melody] --> B[Adjust style and parameters]
-    B --> C[Generate continuation]
-    C --> D[Preview harmony and melody]
-    D --> E[Listen and compare]
-    E --> F[Export MIDI or iterate again]
+    A[输入或上传旋律] --> B[调整风格与参数]
+    B --> C[生成新的旋律延展]
+    C --> D[查看和声与旋律结果]
+    D --> E[试听与比较]
+    E --> F[导出 MIDI 或继续生成]
 ```
 
-## Site Architecture
+## 站点架构
 
 ```mermaid
 flowchart TB
-    User[User] --> Home[Homepage]
-    Home --> Studio[Embedded Studio Service]
-    Studio --> ParseAPI[/api/score/parse]
-    Studio --> GenerateAPI[/api/improv/generate]
-    Studio --> ExportAPI[/api/midi/export]
-    ParseAPI --> Functions[Cloudflare Pages Functions]
-    GenerateAPI --> Functions
-    ExportAPI --> Functions
+    U[用户] --> H[产品首页]
+    H --> S[内嵌服务工作台]
+    S --> P[图片解析接口]
+    S --> G[旋律生成接口]
+    S --> M[MIDI 导出接口]
+    P --> F[Cloudflare Functions]
+    G --> F
+    M --> F
 ```
 
-## Repository Structure
+## 仓库结构
 
 ```text
 public/
-  index.html              Product homepage
-  styles.css              Homepage styles
-  studio/                 Built studio assets embedded into the homepage
+  index.html              产品首页
+  styles.css              首页样式
+  studio/                 内嵌服务的构建产物
 functions/
   api/
-    score/parse.js        Score image parsing endpoint
-    improv/generate.js    Melody generation endpoint
-    midi/export.js        MIDI export endpoint
+    score/parse.js        乐谱图片解析接口
+    improv/generate.js    旋律生成接口
+    midi/export.js        MIDI 导出接口
 program/
   Musemelody/
-    frontend/             Main studio frontend source (Vite + React)
-    backend/              Original Python/FastAPI reference implementation
+    frontend/             成熟服务前端源码（Vite + React）
+    backend/              原始 Python/FastAPI 参考实现
 scripts/
-  build-studio.mjs        Builds the studio and injects the embedded script into homepage
+  build-studio.mjs        构建服务并注入首页的脚本
 ```
 
-## Core Source Files
+## 关键文件
 
-### Product homepage
+### 产品首页
 
 - [public/index.html](public/index.html)
 - [public/styles.css](public/styles.css)
 
-### Embedded studio service
+### 成熟服务源码
 
 - [program/Musemelody/frontend/src/InspirationMuse.jsx](program/Musemelody/frontend/src/InspirationMuse.jsx)
 - [program/Musemelody/frontend/src/App.jsx](program/Musemelody/frontend/src/App.jsx)
 - [program/Musemelody/frontend/src/embed.jsx](program/Musemelody/frontend/src/embed.jsx)
 - [program/Musemelody/frontend/vite.config.js](program/Musemelody/frontend/vite.config.js)
 
-### Site APIs
+### 站内 API
 
 - [functions/api/score/parse.js](functions/api/score/parse.js)
 - [functions/api/improv/generate.js](functions/api/improv/generate.js)
 - [functions/api/midi/export.js](functions/api/midi/export.js)
 
-## Local Development
+## 本地运行
 
-### 1. Install root dependencies
+### 1. 安装根项目依赖
 
 ```bash
 npm install
 ```
 
-### 2. Install studio frontend dependencies
+### 2. 安装成熟服务前端依赖
 
 ```bash
 cd program/Musemelody/frontend
 npm install
 ```
 
-### 3. Build the embedded studio
+### 3. 构建成熟服务
 
 ```bash
 cd ../../..
 npm run build:studio
 ```
 
-### 4. Start the site locally
+### 4. 本地启动站点
 
 ```bash
 npm run dev
 ```
 
-## Deployment
+## 部署说明
 
-The project is designed for Cloudflare Pages.
+当前项目适合部署到 Cloudflare Pages。
 
-Recommended configuration:
+推荐配置：
 
 - Framework preset: `None`
-- Build command: leave empty
+- Build command: 留空
 - Build output directory: `public`
 
-Important:
-
-Whenever you update the studio frontend source under `program/Musemelody/frontend/`, rebuild it before deployment:
+当你更新 `program/Musemelody/frontend/` 中的成熟服务源码后，请先执行：
 
 ```bash
 npm run build:studio
 ```
 
-## Current Implementation Notes
+这样首页内嵌的服务脚本才会同步更新。
 
-The current online version uses:
+## 当前实现说明
 
-- Cloudflare Pages static frontend
-- Cloudflare Pages Functions APIs
-- Embedded studio build output under `public/studio/`
+当前线上版本使用：
 
-The original Python/FastAPI backend remains in the repository as a reference implementation under [program/Musemelody/backend](program/Musemelody/backend).
+- Cloudflare Pages 静态前端
+- Cloudflare Pages Functions API
+- 嵌入首页的成熟服务构建产物
 
-## Roadmap
+仓库中的 [program/Musemelody/backend](program/Musemelody/backend) 保留了原始 Python/FastAPI 参考实现。
 
-Potential next steps for the product include:
+## 路线图
 
-- Replacing the current placeholder score parsing with a real OMR model
-- Replacing the current rule-based generation with a real model inference service
-- Adding generation history and version comparison
-- Improving playback/export feedback and result states
-- Adding user accounts and project persistence
+后续可以继续增强的方向包括：
 
-## Repository Policy
+- 接入真实 OMR 乐谱识别模型
+- 接入更真实的旋律生成推理服务
+- 增加生成历史与版本比较
+- 增强导出、播放和状态反馈
+- 增加用户系统与作品保存能力
 
-This repository is not released as open source software.
+## 仓库说明
 
-Please see:
+本仓库并非开源软件仓库。
+
+请参见：
 
 - [LICENSE](LICENSE)
 - [NOTICE](NOTICE)
