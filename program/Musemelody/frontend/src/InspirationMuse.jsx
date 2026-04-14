@@ -498,6 +498,7 @@ export default function InspirationMuse({ embedded = false }) {
   const [customNotes, setCustomNotes] = useState([]);
   const [selectedDuration, setSelectedDuration] = useState(1);
   const [uploadHint, setUploadHint] = useState("");
+  const [toast, setToast] = useState("");
   const fileInputRef = useRef(null);
   const audioRef = useRef(new AudioEngine());
   const durationToLabel = useCallback((duration) => {
@@ -539,6 +540,7 @@ export default function InspirationMuse({ embedded = false }) {
     setMelody(withBeats);
     setImprovisation([]);
     setApiAnalysis(`已载入 ${presetName}，你现在可以直接开始生成。`);
+    setToast(`已为你载入预设：${presetName}`);
     setPhase("input");
   };
 
@@ -561,11 +563,14 @@ export default function InspirationMuse({ embedded = false }) {
         setImprovisation([]);
         setApiAnalysis("");
         setUploadHint("已成功载入旋律内容。");
+        setToast("图片识别完成，旋律内容已载入。 ");
       } else {
         setUploadHint("这张图片里暂时没有识别到可用旋律。");
+        setToast("暂时没有识别到可用旋律，请尝试更清晰的图片。 ");
       }
     } catch (e) {
       setUploadHint("暂时无法读取这张乐谱图片，请稍后再试。");
+      setToast("图片上传失败，请稍后再试。 ");
     }
   };
 
@@ -591,12 +596,14 @@ export default function InspirationMuse({ embedded = false }) {
       setAnalysis(data.analysis || analyzeMelody(melody));
       setImprovisation(data.improvisation || []);
       setApiAnalysis("新的旋律已经生成完成。你可以直接试听、查看和声建议，或继续调整参数。 ");
+      setToast("生成完成，你现在可以试听和导出结果。 ");
     } catch (e) {
       const localAnalysis = analyzeMelody(melody);
       localAnalysis.tempo = tempo;
       setAnalysis(localAnalysis);
       setImprovisation(generateImprovisation(localAnalysis, melody, style, bars));
       setApiAnalysis("结果已经生成完成。你可以继续试听和比较当前版本。 ");
+      setToast("生成完成，你现在可以试听和比较当前版本。 ");
     }
     setIsApiLoading(false);
     setPhase("result");
@@ -621,8 +628,10 @@ export default function InspirationMuse({ embedded = false }) {
       a.download = "muse_improv.mid";
       a.click();
       window.URL.revokeObjectURL(url);
+      setToast("MIDI 文件已开始导出。 ");
     } catch (e) {
       setApiAnalysis("当前无法导出文件，请稍后再试。");
+      setToast("导出失败，请稍后再试。 ");
     }
   };
 
@@ -870,6 +879,29 @@ export default function InspirationMuse({ embedded = false }) {
       fontSize: 13,
       lineHeight: 1.6,
     },
+    toast: {
+      marginBottom: 18,
+      padding: "12px 14px",
+      borderRadius: 12,
+      border: "1px solid rgba(44,210,182,0.18)",
+      background: "rgba(44,210,182,0.12)",
+      color: "#e8fff9",
+      fontSize: 13,
+      lineHeight: 1.6,
+    },
+    actionBar: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      gap: 12,
+      marginTop: 18,
+      flexWrap: "wrap",
+    },
+    actionMeta: {
+      color: "#bdb2d4",
+      fontSize: 13,
+      lineHeight: 1.6,
+    },
   };
 
   return (
@@ -920,6 +952,8 @@ export default function InspirationMuse({ embedded = false }) {
         {/* ═══ INPUT SECTION ═══ */}
         <section style={css.section}>
           <h2 style={css.sectionTitle}>⟐ 输入旋律</h2>
+
+          {toast && <div style={css.toast}>{toast}</div>}
 
           <div style={css.statusRow}>
             <div style={css.statusCard}>
@@ -1169,14 +1203,15 @@ export default function InspirationMuse({ embedded = false }) {
                   ⤓ 导出 MIDI
                 </button>
               </div>
-            </section>
 
-            {/* Regenerate */}
-            <div style={{ textAlign: "center", marginTop: 8, marginBottom: 40 }}>
-              <button style={{ ...css.btn(false), fontSize: 13 }} onClick={handleGenerate}>
-                ↻ 再生成一次
-              </button>
-            </div>
+              <div style={css.actionBar}>
+                <div style={css.actionMeta}>你可以试听原旋律、试听生成结果，或直接导出当前版本继续使用。</div>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  <button style={{ ...css.btn(false), fontSize: 13 }} onClick={() => exportMidi(false)}>导出生成旋律</button>
+                  <button style={{ ...css.btn(false), fontSize: 13 }} onClick={handleGenerate}>生成新版本</button>
+                </div>
+              </div>
+            </section>
           </>
         )}
       </div>
