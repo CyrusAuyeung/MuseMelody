@@ -547,22 +547,29 @@ export default function InspirationMuse({ embedded = false }) {
   // Parse sheet music image through backend OMR API
   const handleImageUpload = async (file) => {
     if (!file) return;
-    setUploadHint("正在读取乐谱内容...");
+    setUploadHint("正在识别乐谱内容...");
     try {
       const form = new FormData();
       form.append("file", file);
       const response = await fetch(`${API_BASE}/api/score/parse`, { method: "POST", body: form });
       const data = await response.json();
-      const detected = (data.detected || []).map(n => ({
-        midi: n.midi,
-        duration: n.duration || 1,
-        beat: n.beat || 0,
-      }));
+      const detected = (Array.isArray(data.notes) && data.notes.length
+        ? data.notes.map((n) => ({
+            midi: n.pitch_midi,
+            duration: n.duration_beat || 1,
+            beat: n.start_beat || 0,
+          }))
+        : (data.detected || []).map((n) => ({
+            midi: n.midi,
+            duration: n.duration || 1,
+            beat: n.beat || 0,
+          }))
+      );
       if (detected.length) {
         setMelody(detected);
         setImprovisation([]);
         setApiAnalysis("");
-        setUploadHint("已成功载入旋律内容。");
+        setUploadHint(data.message || "已成功载入旋律内容。");
         setToast("图片识别完成，旋律内容已载入。 ");
       } else {
         setUploadHint("这张图片里暂时没有识别到可用旋律。");
