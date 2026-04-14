@@ -544,13 +544,37 @@ export default function InspirationMuse({ embedded = false }) {
     setPhase("input");
   };
 
+  const normalizeImageFile = async (file) => {
+    if (!file.type.startsWith("image/")) {
+      return file;
+    }
+
+    const bitmap = await createImageBitmap(file);
+    const maxWidth = 1600;
+    const scale = bitmap.width > maxWidth ? maxWidth / bitmap.width : 1;
+    const width = Math.max(1, Math.round(bitmap.width * scale));
+    const height = Math.max(1, Math.round(bitmap.height * scale));
+
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, width, height);
+    ctx.drawImage(bitmap, 0, 0, width, height);
+
+    const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png", 0.92));
+    return new File([blob], file.name.replace(/\.[^.]+$/, ".png"), { type: "image/png" });
+  };
+
   // Parse sheet music image through backend OMR API
   const handleImageUpload = async (file) => {
     if (!file) return;
-    setUploadHint("正在识别乐谱内容...");
+    setUploadHint("正在处理图片并识别乐谱内容...");
     try {
+      const normalizedFile = await normalizeImageFile(file);
       const form = new FormData();
-      form.append("file", file);
+      form.append("file", normalizedFile);
       const response = await fetch(`${API_BASE}/api/score/parse`, { method: "POST", body: form });
       const data = await response.json();
       const detected = (Array.isArray(data.notes) && data.notes.length
