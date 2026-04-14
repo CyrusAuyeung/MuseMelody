@@ -528,6 +528,20 @@ export default function InspirationMuse({ embedded = false }) {
     setApiAnalysis("");
   };
 
+  const loadPresetMelody = (presetName) => {
+    const preset = PRESET_MELODIES[presetName] || [];
+    let beat = 0;
+    const withBeats = preset.map((note) => {
+      const next = { ...note, beat };
+      beat += note.duration;
+      return next;
+    });
+    setMelody(withBeats);
+    setImprovisation([]);
+    setApiAnalysis(`已载入 ${presetName}，你现在可以直接开始生成。`);
+    setPhase("input");
+  };
+
   // Parse sheet music image through backend OMR API
   const handleImageUpload = async (file) => {
     if (!file) return;
@@ -797,6 +811,65 @@ export default function InspirationMuse({ embedded = false }) {
       color: "#ddd5ee",
       opacity: 0.92,
     },
+    statusRow: {
+      display: "grid",
+      gridTemplateColumns: embedded ? "repeat(3, 1fr)" : "repeat(3, 1fr)",
+      gap: 12,
+      marginBottom: 18,
+    },
+    statusCard: {
+      padding: "14px 16px",
+      borderRadius: 14,
+      border: "1px solid rgba(255,255,255,0.12)",
+      background: "rgba(255,255,255,0.05)",
+    },
+    statusTitle: {
+      fontSize: 12,
+      color: "#bdb2d4",
+      marginBottom: 6,
+      letterSpacing: 1.2,
+      textTransform: "uppercase",
+    },
+    statusValue: {
+      fontSize: 14,
+      color: "#f3ecff",
+      lineHeight: 1.5,
+    },
+    emptyPanel: {
+      marginTop: 16,
+      padding: 18,
+      borderRadius: 14,
+      border: "1px dashed rgba(255,255,255,0.14)",
+      background: "rgba(255,255,255,0.03)",
+      color: "#cfc5df",
+      lineHeight: 1.7,
+    },
+    presetRow: {
+      display: "grid",
+      gridTemplateColumns: embedded ? "repeat(3, 1fr)" : "repeat(2, 1fr)",
+      gap: 12,
+      marginBottom: 18,
+    },
+    presetCard: {
+      padding: "14px 16px",
+      borderRadius: 14,
+      border: "1px solid rgba(255,255,255,0.1)",
+      background: "rgba(255,255,255,0.04)",
+      cursor: "pointer",
+      textAlign: "left",
+    },
+    presetName: {
+      display: "block",
+      color: "#f3ecff",
+      fontSize: 15,
+      marginBottom: 6,
+      fontWeight: 600,
+    },
+    presetDesc: {
+      color: "#bdb2d4",
+      fontSize: 13,
+      lineHeight: 1.6,
+    },
   };
 
   return (
@@ -847,6 +920,36 @@ export default function InspirationMuse({ embedded = false }) {
         {/* ═══ INPUT SECTION ═══ */}
         <section style={css.section}>
           <h2 style={css.sectionTitle}>⟐ 输入旋律</h2>
+
+          <div style={css.statusRow}>
+            <div style={css.statusCard}>
+              <div style={css.statusTitle}>当前输入</div>
+              <div style={css.statusValue}>{melody.length ? `已载入 ${melody.length} 个音符` : "尚未载入旋律"}</div>
+            </div>
+            <div style={css.statusCard}>
+              <div style={css.statusTitle}>当前状态</div>
+              <div style={css.statusValue}>{phase === "result" ? "已生成结果" : phase === "analyzing" ? "正在生成中" : "等待开始"}</div>
+            </div>
+            <div style={css.statusCard}>
+              <div style={css.statusTitle}>下一步</div>
+              <div style={css.statusValue}>{melody.length ? "设置参数后点击生成" : "先选择预设、录入或上传旋律"}</div>
+            </div>
+          </div>
+
+          <div style={css.presetRow}>
+            <button type="button" style={css.presetCard} onClick={() => loadPresetMelody("Twinkle Twinkle")}>
+              <span style={css.presetName}>快速体验</span>
+              <span style={css.presetDesc}>用熟悉旋律快速跑通生成、试听和结果区。</span>
+            </button>
+            <button type="button" style={css.presetCard} onClick={() => loadPresetMelody("Jazz Blues (Bb)")}>
+              <span style={css.presetName}>风格测试</span>
+              <span style={css.presetDesc}>更适合观察和声色彩和生成方向的变化。</span>
+            </button>
+            <button type="button" style={css.presetCard} onClick={() => loadPresetMelody("Minor Waltz")}>
+              <span style={css.presetName}>抒情延展</span>
+              <span style={css.presetDesc}>适合测试更流动、更抒情的旋律发展结果。</span>
+            </button>
+          </div>
 
           {/* Input mode tabs */}
           <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
@@ -952,6 +1055,18 @@ export default function InspirationMuse({ embedded = false }) {
             <div style={{ marginTop: 16 }}>
               <StaffNotation notes={melody} label="原始旋律 Original Melody"
                 highlightIndex={playingWhat === "original" ? highlightIdx : -1} color="#7eb8ff" />
+            </div>
+          )}
+
+          {!melody.length && (
+            <div style={css.emptyPanel}>
+              你可以通过三种方式开始：
+              <br />
+              1. 选择一个预设旋律，快速体验完整流程。
+              <br />
+              2. 用键盘录入一段自己的旋律。
+              <br />
+              3. 上传乐谱图片，让系统先识别出旋律内容。
             </div>
           )}
         </section>
