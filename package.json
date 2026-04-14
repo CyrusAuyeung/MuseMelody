@@ -4,7 +4,9 @@
   "private": true,
   "description": "MuseMelody demo page for score-to-improvisation generation on Cloudflare Pages.",
   "scripts": {
+    "build:studio": "node scripts/build-studio.mjs",
     "dev": "wrangler pages dev public --compatibility-date=2026-04-13",
+    "dev:studio": "npm run build:studio ; wrangler pages dev public --compatibility-date=2026-04-13",
     "deploy": "wrangler pages deploy public --project-name musemelody"
   },
   "devDependencies": {

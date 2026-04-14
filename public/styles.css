@@ -881,6 +881,12 @@ input[type="range"] {
   border: 1px solid var(--line);
 }
 
+.cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
 .site-footer {
   position: relative;
   z-index: 1;
@@ -968,7 +974,9 @@ input[type="range"] {
 
   .hero-actions .primary-button,
   .hero-actions .ghost-button,
-  .header-actions .ghost-button {
+  .header-actions .ghost-button,
+  .cta-actions .primary-button,
+  .cta-actions .ghost-button {
     flex: 1 1 auto;
   }
 
