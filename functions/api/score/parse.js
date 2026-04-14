@@ -87,8 +87,14 @@ async function parseWithOpenAI(file, apiKey) {
   });
 
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`OpenAI request failed: ${response.status} ${errorText}`);
+    let errorDetail = "";
+    try {
+      const errorJson = await response.clone().json();
+      errorDetail = errorJson?.error?.message || JSON.stringify(errorJson);
+    } catch {
+      errorDetail = await response.text();
+    }
+    throw new Error(`OpenAI request failed: ${response.status}${errorDetail ? ` - ${errorDetail}` : ""}`);
   }
 
   const data = await response.json();
