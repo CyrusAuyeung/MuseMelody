@@ -530,7 +530,7 @@ export default function InspirationMuse({ embedded = false }) {
   // Parse sheet music image through backend OMR API
   const handleImageUpload = async (file) => {
     if (!file) return;
-    setUploadHint("正在识别乐谱图片...");
+    setUploadHint("正在读取乐谱内容...");
     try {
       const form = new FormData();
       form.append("file", file);
@@ -545,12 +545,12 @@ export default function InspirationMuse({ embedded = false }) {
         setMelody(detected);
         setImprovisation([]);
         setApiAnalysis("");
-        setUploadHint("识别完成，已载入旋律。");
+        setUploadHint("已成功载入旋律内容。");
       } else {
-        setUploadHint("未识别到可用音符。");
+        setUploadHint("这张图片里暂时没有识别到可用旋律。");
       }
     } catch (e) {
-      setUploadHint("识别失败，请确认后端已启动。");
+      setUploadHint("暂时无法读取这张乐谱图片，请稍后再试。");
     }
   };
 
@@ -575,13 +575,13 @@ export default function InspirationMuse({ embedded = false }) {
       if (!response.ok) throw new Error(data.detail || "生成失败");
       setAnalysis(data.analysis || analyzeMelody(melody));
       setImprovisation(data.improvisation || []);
-      setApiAnalysis("后端生成完成：已结合原始旋律转移特征与风格参数输出即兴合奏旋律。");
+      setApiAnalysis("新的旋律已经生成完成。你可以直接试听、查看和声建议，或继续调整参数。 ");
     } catch (e) {
       const localAnalysis = analyzeMelody(melody);
       localAnalysis.tempo = tempo;
       setAnalysis(localAnalysis);
       setImprovisation(generateImprovisation(localAnalysis, melody, style, bars));
-      setApiAnalysis("后端不可用，已自动切换到本地生成引擎。");
+      setApiAnalysis("结果已经生成完成。你可以继续试听和比较当前版本。 ");
     }
     setIsApiLoading(false);
     setPhase("result");
@@ -607,7 +607,7 @@ export default function InspirationMuse({ embedded = false }) {
       a.click();
       window.URL.revokeObjectURL(url);
     } catch (e) {
-      setApiAnalysis("MIDI 导出失败，请确认后端服务正在运行。");
+      setApiAnalysis("当前无法导出文件，请稍后再试。");
     }
   };
 
@@ -807,10 +807,10 @@ export default function InspirationMuse({ embedded = false }) {
         {/* Header */}
         {!embedded && (
           <header style={css.header}>
-            <h1 style={css.title}>靈 感 繆 斯</h1>
+            <h1 style={css.title}>MuseMelody</h1>
             <p style={css.subtitle}>AI Music Improvisation Generator</p>
             <p style={{ fontSize: 12, color: "rgba(160,140,200,0.4)", marginTop: 4, letterSpacing: 2 }}>
-              深度學習 · 音樂理論 · 即興創作
+              旋律生成 · 和声建议 · 即时试听
             </p>
           </header>
         )}
@@ -923,7 +923,7 @@ export default function InspirationMuse({ embedded = false }) {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
             {/* Style */}
             <div>
-              <label style={{ fontSize: 13, color: "#a098b8", display: "block", marginBottom: 6 }}>即興風格</label>
+              <label style={{ fontSize: 13, color: "#a098b8", display: "block", marginBottom: 6 }}>生成风格</label>
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                 {[["jazz","爵士"], ["blues","藍調"], ["classical","古典"], ["experimental","實驗"]].map(([s, l]) => (
                   <button key={s} style={css.pill(style === s)} onClick={() => setStyle(s)}>{l}</button>
@@ -960,9 +960,9 @@ export default function InspirationMuse({ embedded = false }) {
               {phase === "analyzing" ? (
                 <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <span style={{ display: "inline-block", width: 16, height: 16, border: "2px solid rgba(255,255,255,0.3)", borderTop: "2px solid #fff", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
-                  生成中…
+                    正在生成…
                 </span>
-              ) : "✦ 生成即興樂段"}
+                ) : "生成旋律"}
             </button>
           </div>
         </section>
@@ -972,27 +972,27 @@ export default function InspirationMuse({ embedded = false }) {
           <>
             {/* Analysis */}
             <section style={css.section}>
-              <h2 style={css.sectionTitle}>⟐ 音樂分析</h2>
+              <h2 style={css.sectionTitle}>⟐ 结果概览</h2>
               {analysis && (
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }}>
-                  <span style={css.badge("#7eb8ff")}>調性: {analysis.key} {analysis.scale}</span>
-                  <span style={css.badge("#ffb0d0")}>風格: {style}</span>
+                  <span style={css.badge("#7eb8ff")}>调性: {analysis.key} {analysis.scale}</span>
+                  <span style={css.badge("#ffb0d0")}>风格: {style}</span>
                   <span style={css.badge("#80e8c0")}>BPM: {tempo}</span>
-                  <span style={css.badge("#ffd080")}>小節: {bars}</span>
-                  <span style={css.badge("#c9a0ff")}>音符數: {improvisation.filter(n => !n.isRest).length}</span>
+                  <span style={css.badge("#ffd080")}>长度: {bars} 小节</span>
+                  <span style={css.badge("#c9a0ff")}>音符数: {improvisation.filter(n => !n.isRest).length}</span>
                 </div>
               )}
               <div style={css.analysisBox}>
                 {isApiLoading ? (
-                  <span style={{ color: "#a098b8", animation: "pulse 1.5s infinite" }}>AI 正在分析音樂結構…</span>
+                  <span style={{ color: "#a098b8", animation: "pulse 1.5s infinite" }}>正在整理结果…</span>
                 ) : apiAnalysis}
               </div>
             </section>
 
             {/* Generated Score */}
             <section style={css.section}>
-              <h2 style={css.sectionTitle}>⟐ 即興樂段</h2>
-              <StaffNotation notes={improvisation} label="AI 生成即興 Generated Improvisation"
+              <h2 style={css.sectionTitle}>⟐ 生成结果</h2>
+              <StaffNotation notes={improvisation} label="生成旋律 Generated Melody"
                 highlightIndex={playingWhat === "improv" ? highlightIdx : -1} color="#ffb0d0" />
 
               {/* Waveform */}
@@ -1003,16 +1003,16 @@ export default function InspirationMuse({ embedded = false }) {
                 <button style={css.bigBtn("#7eb8ff")} onClick={() => play("original")}
                   disabled={isPlaying}>▶ 原始旋律</button>
                 <button style={css.bigBtn("#ffb0d0")} onClick={() => play("improv")}
-                  disabled={isPlaying}>▶ 即興樂段</button>
+                  disabled={isPlaying}>▶ 生成旋律</button>
                 <button style={css.bigBtn("#80e8c0")} onClick={() => play("both")}
-                  disabled={isPlaying}>▶ 合奏播放</button>
+                  disabled={isPlaying}>▶ 合并试听</button>
                 {isPlaying && (
-                  <button style={css.bigBtn("#ff8888")} onClick={stop}>⏹ 停止</button>
+                  <button style={css.bigBtn("#ff8888")} onClick={stop}>⏹ 停止播放</button>
                 )}
               </div>
               <div style={{ textAlign: "center", marginTop: 12 }}>
                 <button style={{ ...css.btn(false), fontSize: 13 }} onClick={() => exportMidi(true)}>
-                  ⤓ 导出合奏 MIDI
+                  ⤓ 导出 MIDI
                 </button>
               </div>
             </section>
@@ -1020,7 +1020,7 @@ export default function InspirationMuse({ embedded = false }) {
             {/* Regenerate */}
             <div style={{ textAlign: "center", marginTop: 8, marginBottom: 40 }}>
               <button style={{ ...css.btn(false), fontSize: 13 }} onClick={handleGenerate}>
-                ↻ 重新生成
+                ↻ 再生成一次
               </button>
             </div>
           </>
