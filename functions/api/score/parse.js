@@ -55,7 +55,8 @@ async function parseWithOpenAI({ file, apiKey, imageUrl, arrayBuffer }) {
   const apiBaseUrl = (globalThis.__MUSE_OPENAI_BASE_URL__ || "https://api.openai.com/v1").replace(/\/$/, "");
   const modelName = globalThis.__MUSE_OPENAI_MODEL__ || "gpt-4o";
   const mimeType = file.type && /^image\//.test(file.type) ? file.type : "image/png";
-  const finalImageUrl = imageUrl || `data:${mimeType};base64,${arrayBufferToBase64(arrayBuffer)}`;
+  const dataUrl = `data:${mimeType};base64,${arrayBufferToBase64(arrayBuffer)}`;
+  const finalImageUrl = dataUrl;
 
   const prompt = [
     "你是专业光学乐谱识别引擎。",
@@ -138,7 +139,7 @@ async function parseWithOpenAI({ file, apiKey, imageUrl, arrayBuffer }) {
       input_file: file.name || "uploaded-file",
       parser: `openai-compatible:${modelName}`,
       base_url: apiBaseUrl,
-      image_mode: imageUrl ? "remote-url" : "data-url"
+      image_mode: "data-url"
     },
     message: "乐谱识别完成。"
   };
@@ -155,24 +156,8 @@ export async function onRequestPost(context) {
   }
 
   const apiKey = context.env.OPENAI_API_KEY?.trim();
-  const requestUrl = new URL(context.request.url);
-  const baseOrigin = requestUrl.origin;
-  const useRemoteImageUrl = /blindot/i.test(globalThis.__MUSE_OPENAI_BASE_URL__ || "");
   const arrayBuffer = await file.arrayBuffer();
-  let imageUrl = null;
-
-  if (useRemoteImageUrl) {
-    const token = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
-    const uploadStore = globalThis.__MUSE_SCORE_UPLOADS__ || new Map();
-    globalThis.__MUSE_SCORE_UPLOADS__ = uploadStore;
-    uploadStore.set(token, {
-      bytes: new Uint8Array(arrayBuffer),
-      type: file.type || "image/png",
-      name: file.name || "uploaded-image",
-      createdAt: Date.now(),
-    });
-    imageUrl = `${baseOrigin}/api/score/temp/${token}`;
-  }
+  const imageUrl = null;
 
   if (!apiKey) {
     const fallback = fallbackResponse(file.name || "uploaded-file");
@@ -193,7 +178,7 @@ export async function onRequestPost(context) {
       parser: "fallback",
       base_url: globalThis.__MUSE_OPENAI_BASE_URL__,
       model: globalThis.__MUSE_OPENAI_MODEL__,
-      image_mode: imageUrl ? "remote-url" : "data-url",
+      image_mode: "data-url",
       reason: error instanceof Error ? error.message : "unknown-error"
     };
     return Response.json(fallback);

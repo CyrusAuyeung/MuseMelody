@@ -576,7 +576,7 @@ export default function InspirationMuse({ embedded = false }) {
           : rawReason.includes("does not represent a valid image")
             ? "上传的图片未被识别为有效图像，请尝试 PNG 或 JPG 格式，并确保图片清晰可见。"
             : rawReason.includes("Error while downloading")
-              ? "远程图像下载失败，兼容接口未成功获取图片内容。"
+              ? "兼容接口未成功获取图片内容，请稍后再试或更换图片。"
               : rawReason;
         const parserReason = readableReason
           ? ` 原因：${readableReason.slice(0, 320)}`
