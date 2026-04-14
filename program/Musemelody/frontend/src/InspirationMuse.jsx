@@ -468,7 +468,7 @@ const PRESET_MELODIES = {
 //  MAIN APP COMPONENT
 // ══════════════════════════════════════════════
 
-export default function InspirationMuse() {
+export default function InspirationMuse({ embedded = false }) {
   const API_BASE =
     (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.VITE_API_BASE) ||
     (typeof window !== "undefined" && ["localhost", "127.0.0.1"].includes(window.location.hostname)
@@ -648,11 +648,11 @@ export default function InspirationMuse() {
   // ── STYLES ──
   const css = {
     app: {
-      minHeight: "100vh",
-      background: "linear-gradient(170deg, #0a0612 0%, #110b20 40%, #0d1025 70%, #080510 100%)",
+      minHeight: embedded ? "auto" : "100vh",
+      background: embedded ? "transparent" : "linear-gradient(170deg, #0a0612 0%, #110b20 40%, #0d1025 70%, #080510 100%)",
       color: "#e0d8f0",
       fontFamily: "'Cormorant Garamond', Georgia, serif",
-      padding: "24px 16px",
+      padding: embedded ? "0" : "24px 16px",
       position: "relative",
       overflow: "hidden",
     },
@@ -805,13 +805,15 @@ export default function InspirationMuse() {
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: 800, margin: "0 auto" }}>
         {/* Header */}
-        <header style={css.header}>
-          <h1 style={css.title}>靈 感 繆 斯</h1>
-          <p style={css.subtitle}>AI Music Improvisation Generator</p>
-          <p style={{ fontSize: 12, color: "rgba(160,140,200,0.4)", marginTop: 4, letterSpacing: 2 }}>
-            深度學習 · 音樂理論 · 即興創作
-          </p>
-        </header>
+        {!embedded && (
+          <header style={css.header}>
+            <h1 style={css.title}>靈 感 繆 斯</h1>
+            <p style={css.subtitle}>AI Music Improvisation Generator</p>
+            <p style={{ fontSize: 12, color: "rgba(160,140,200,0.4)", marginTop: 4, letterSpacing: 2 }}>
+              深度學習 · 音樂理論 · 即興創作
+            </p>
+          </header>
+        )}
 
         {/* ═══ INPUT SECTION ═══ */}
         <section style={css.section}>

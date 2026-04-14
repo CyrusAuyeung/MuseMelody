@@ -214,7 +214,6 @@ button {
 .trust-strip,
 .value-grid,
 .roadmap-grid,
-.template-grid,
 .faq-grid {
   display: grid;
   gap: 14px;
@@ -229,7 +228,6 @@ button {
 .value-card,
 .business-card,
 .roadmap-card,
-.template-card,
 .faq-card,
 .card-dark,
 .card-light,
@@ -243,7 +241,6 @@ button {
 .value-card,
 .business-card,
 .roadmap-card,
-.template-card,
 .faq-card {
   border: 1px solid var(--line);
 }
@@ -422,7 +419,6 @@ button {
 }
 
 .value-section,
-.templates-section,
 .business-section,
 .demo-shell,
 .roadmap-shell,
@@ -500,42 +496,6 @@ button {
   line-height: 1.78;
 }
 
-.template-grid {
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.template-card {
-  padding: 24px;
-  background: rgba(255, 255, 255, 0.045);
-  text-align: left;
-  color: var(--text);
-}
-
-.template-card strong {
-  display: block;
-  margin-bottom: 10px;
-  font-size: 1.2rem;
-}
-
-.template-card p {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.72;
-}
-
-.template-tag {
-  margin-bottom: 14px;
-  background: rgba(44, 210, 182, 0.14);
-  color: #c9fff6;
-  font-size: 0.88rem;
-}
-
-.template-card:hover,
-.template-card:focus-visible {
-  transform: translateY(-2px);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
-}
-
 .business-section {
   display: grid;
   grid-template-columns: 0.95fr 1.05fr;
@@ -572,6 +532,18 @@ button {
   border-radius: 50%;
   background: var(--accent);
   box-shadow: 0 0 0 6px rgba(44, 210, 182, 0.14);
+}
+
+.demo-shell--embedded {
+  padding: 32px;
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-xl);
+}
+
+.embedded-studio-host {
+  margin-top: 8px;
 }
 
 .workspace-grid {
@@ -919,7 +891,6 @@ input[type="range"] {
   .hero-metrics,
   .trust-strip,
   .value-grid,
-  .template-grid,
   .roadmap-grid,
   .faq-grid,
   .slider-grid {
@@ -958,11 +929,11 @@ input[type="range"] {
   .metric-card,
   .trust-card,
   .value-card,
-  .template-card,
   .business-card,
   .roadmap-card,
   .faq-card,
-  .cta-band {
+  .cta-band,
+  .demo-shell--embedded {
     padding: 20px;
     border-radius: 24px;
   }

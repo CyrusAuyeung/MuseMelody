@@ -15,7 +15,6 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
-    <script type="module" src="./app.js" defer></script>
   </head>
   <body>
     <div class="site-frame">
@@ -31,13 +30,13 @@
         <nav class="site-nav" aria-label="主导航">
           <a href="#features">产品能力</a>
           <a href="#templates">快速模板</a>
-          <a href="#live-demo">在线体验</a>
+          <a href="#studio-service">核心服务</a>
           <a href="#faq">常见问题</a>
         </nav>
 
         <div class="header-actions">
           <span class="status-chip">Now Available</span>
-          <a class="ghost-button ghost-button--link" href="#live-demo">试用工作台</a>
+          <a class="ghost-button ghost-button--link" href="#studio-service">进入服务</a>
         </div>
       </header>
 
@@ -51,8 +50,7 @@
             </p>
 
             <div class="hero-actions">
-              <a class="primary-button primary-button--link" href="#live-demo">立即生成一段</a>
-              <a class="primary-button primary-button--link" href="/studio/">进入完整工作台</a>
+              <a class="primary-button primary-button--link" href="#studio-service">进入核心服务</a>
               <a class="ghost-button ghost-button--link" href="#features">查看产品能力</a>
             </div>
 
@@ -173,190 +171,18 @@
           </div>
         </section>
 
-        <section id="templates" class="templates-section">
+        <section id="studio-service" class="demo-shell demo-shell--embedded">
           <div class="section-heading section-heading--tight">
             <div>
-              <p class="section-tag">Quick Start Templates</p>
-              <h2>不想从零输入时，可以先从一个模板开始。</h2>
+              <p class="section-tag">Core Service</p>
+              <h2>统一的旋律生成与试听服务</h2>
             </div>
             <p>
-              对真实产品来说，模板能显著降低第一次使用门槛。你可以一键填入预设场景，再按自己的需求继续修改。
+              这里就是 MuseMelody 的正式服务界面。你不再需要跳转到独立页面，上传、生成、试听和导出都会直接在首页完成。
             </p>
           </div>
 
-          <div class="template-grid">
-            <button type="button" class="template-card" data-template-prompt="根据一段钢琴 lead sheet，生成 8 小节偏 neo-soul 的即兴旋律，保留原曲主音轮廓与停顿感。" data-template-style="neo-soul" data-template-bars="8" data-template-temperature="0.64" data-template-density="0.58">
-              <span class="template-tag">Neo Soul</span>
-              <strong>平滑续写</strong>
-              <p>适合在已有抒情主旋律后接出更柔和、更流动的城市感旋律。</p>
-            </button>
-
-            <button type="button" class="template-card" data-template-prompt="根据一段 upbeat 流行旋律，生成 8 小节带 city pop 气质的副段旋律，保持律动推进。" data-template-style="city-pop" data-template-bars="8" data-template-temperature="0.68" data-template-density="0.62">
-              <span class="template-tag">City Pop</span>
-              <strong>律动推进</strong>
-              <p>适合希望旋律更明亮、更具推进感的副段或发展段写法。</p>
-            </button>
-
-            <button type="button" class="template-card" data-template-prompt="根据一段三拍子旋律主题，生成 12 小节偏 jazz waltz 的即兴发展，增加和声色彩。" data-template-style="jazz-waltz" data-template-bars="12" data-template-temperature="0.7" data-template-density="0.72">
-              <span class="template-tag">Jazz Waltz</span>
-              <strong>和声扩展</strong>
-              <p>适合需要更丰富和声色彩与更自由旋律线的延展写法。</p>
-            </button>
-          </div>
-        </section>
-
-        <section id="live-demo" class="demo-shell">
-          <div class="section-heading section-heading--tight">
-            <div>
-              <p class="section-tag">Workspace</p>
-              <h2>在线生成工作台</h2>
-            </div>
-            <p>
-              上传你的输入、设置风格和生成参数，然后直接查看和声、旋律片段与试听预览。这里是 MuseMelody 的核心界面。
-            </p>
-          </div>
-
-          <div class="beta-notice">
-            <span class="beta-dot"></span>
-            在线生成体验已开放。你可以直接开始一次旋律续写会话。
-          </div>
-
-          <div class="workspace-grid">
-            <form id="generator-form" class="control-panel card-light">
-              <div class="panel-head">
-                <div>
-                  <p class="section-tag">Session Builder</p>
-                  <h2>创建新的生成会话</h2>
-                </div>
-                <button type="submit" class="primary-button" id="generate-button">立即生成</button>
-              </div>
-
-              <div class="form-grid">
-                <label class="input-block upload-block">
-                  <span>上传乐谱文件</span>
-                  <input id="score-file" type="file" accept=".musicxml,.xml,.mid,.midi,.png,.jpg,.jpeg,.pdf" />
-                  <div class="upload-surface">
-                    <strong id="file-label">拖入文件或点击选择乐谱</strong>
-                    <small>支持 MusicXML、MIDI、图片扫描件等输入形式。</small>
-                  </div>
-                </label>
-
-                <label class="input-block">
-                  <span>你希望它怎么继续写下去</span>
-                  <textarea
-                    id="prompt"
-                    rows="5"
-                    placeholder="例如：保留原曲主旋律轮廓，向后生成 8 小节更有都市感和律动感的旋律。"
-                  >根据一段钢琴 lead sheet，生成 8 小节偏 city pop / neo-soul 的即兴旋律，保留原曲主音轮廓。</textarea>
-                </label>
-
-                <label class="input-block">
-                  <span>输入格式</span>
-                  <select id="input-type">
-                    <option value="musicxml">MusicXML / Lead Sheet</option>
-                    <option value="midi">MIDI</option>
-                    <option value="image">五线谱图片扫描</option>
-                    <option value="text">纯文字描述</option>
-                  </select>
-                </label>
-
-                <div class="input-block">
-                  <span>风格方向</span>
-                  <div class="chip-row" id="style-chooser">
-                    <button type="button" class="chip chip--selected" data-style="neo-soul">Neo Soul</button>
-                    <button type="button" class="chip" data-style="city-pop">City Pop</button>
-                    <button type="button" class="chip" data-style="jazz-waltz">Jazz Waltz</button>
-                    <button type="button" class="chip" data-style="film-score">Film Score</button>
-                  </div>
-                </div>
-
-                <div class="slider-grid">
-                  <label class="input-block range-block">
-                    <span>生成长度 <strong id="bars-value">8</strong></span>
-                    <input id="bars" type="range" min="4" max="16" step="2" value="8" />
-                  </label>
-
-                  <label class="input-block range-block">
-                    <span>创造性 <strong id="temperature-value">0.64</strong></span>
-                    <input id="temperature" type="range" min="0.2" max="0.95" step="0.01" value="0.64" />
-                  </label>
-
-                  <label class="input-block range-block">
-                    <span>和声密度 <strong id="density-value">0.58</strong></span>
-                    <input id="density" type="range" min="0.2" max="0.95" step="0.01" value="0.58" />
-                  </label>
-                </div>
-
-                <div class="input-block">
-                  <span>输出目标</span>
-                  <div class="chip-row" id="output-chooser">
-                    <button type="button" class="chip chip--selected" data-output="score">乐谱预览</button>
-                    <button type="button" class="chip" data-output="midi">MIDI 导出</button>
-                    <button type="button" class="chip" data-output="audio">试听片段</button>
-                  </div>
-                </div>
-              </div>
-
-              <input id="selected-style" type="hidden" value="neo-soul" />
-              <input id="selected-output" type="hidden" value="score" />
-            </form>
-
-            <section class="result-panel card-light">
-              <div class="panel-head panel-head--result">
-                <div>
-                  <p class="section-tag">Result Preview</p>
-                  <h2 id="result-title">等待生成结果</h2>
-                </div>
-                <button type="button" class="ghost-button" id="play-button" disabled>试听结果</button>
-              </div>
-
-              <p id="result-summary" class="result-summary">
-                生成完成后，这里会显示旋律草稿、和声方向和试听信息，帮助你快速判断下一步该怎么继续。
-              </p>
-
-              <div class="result-grid">
-                <article class="subpanel">
-                  <div class="subpanel-head">
-                    <h3>和声走向</h3>
-                    <span id="result-bpm">BPM --</span>
-                  </div>
-                  <div id="harmony-list" class="tag-board tag-board--large">
-                    <span class="tag">等待结果生成</span>
-                  </div>
-                </article>
-
-                <article class="subpanel">
-                  <div class="subpanel-head">
-                    <h3>旋律片段</h3>
-                    <span id="request-id">session --</span>
-                  </div>
-                  <div id="phrase-list" class="phrase-list empty-state">
-                    提交参数后，这里会显示每个小节的旋律轮廓、音高与时值信息。
-                  </div>
-                </article>
-
-                <article class="subpanel">
-                  <div class="subpanel-head">
-                    <h3>试听波形</h3>
-                    <span>Preview Audio</span>
-                  </div>
-                  <div id="waveform" class="waveform"></div>
-                </article>
-
-                <article class="subpanel">
-                  <div class="subpanel-head">
-                    <h3>下一步操作</h3>
-                    <span>Actions</span>
-                  </div>
-                  <ul id="next-steps" class="next-steps">
-                    <li>导出当前旋律片段</li>
-                    <li>继续生成下一段发展</li>
-                    <li>切换风格重新比较结果</li>
-                  </ul>
-                </article>
-              </div>
-            </section>
-          </div>
+          <div id="studio-root" class="embedded-studio-host"></div>
         </section>
 
         <section id="results" class="roadmap-shell">
@@ -423,12 +249,9 @@
         <section class="cta-band">
           <div>
             <p class="section-tag">Start Now</p>
-            <h2>现在就上传一段已有素材，看看下一句旋律会长成什么样。</h2>
+            <h2>现在就进入 MuseMelody 的正式服务界面，开始一次完整的旋律续写流程。</h2>
           </div>
-          <div class="cta-actions">
-            <a class="primary-button primary-button--link" href="#live-demo">体验快速工作台</a>
-            <a class="ghost-button ghost-button--link" href="/studio/">打开完整工作台</a>
-          </div>
+          <a class="primary-button primary-button--link" href="#studio-service">进入服务</a>
         </section>
       </main>
 
@@ -437,5 +260,6 @@
         <span>AI Melody Workspace</span>
       </footer>
     </div>
+      <script type="module" src="/studio/assets/embed-TaPXuStJ.js"></script>
   </body>
 </html>
