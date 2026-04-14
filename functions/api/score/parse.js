@@ -14,6 +14,19 @@ function midiToPitchName(midi) {
   return `${noteName}${octave}`;
 }
 
+function arrayBufferToBase64(arrayBuffer) {
+  const bytes = new Uint8Array(arrayBuffer);
+  let binary = "";
+  const chunkSize = 0x8000;
+
+  for (let index = 0; index < bytes.length; index += chunkSize) {
+    const chunk = bytes.subarray(index, index + chunkSize);
+    binary += String.fromCharCode(...chunk);
+  }
+
+  return btoa(binary);
+}
+
 function fallbackResponse(filename) {
   return {
     source_type: "staff",
@@ -41,11 +54,14 @@ async function parseWithOpenAI(file, apiKey) {
   const normalizedApiKey = apiKey?.trim();
   const apiBaseUrl = (globalThis.__MUSE_OPENAI_BASE_URL__ || "https://api.openai.com/v1").replace(/\/$/, "");
   const modelName = globalThis.__MUSE_OPENAI_MODEL__ || "gpt-4o";
+
+  if (!/api\.openai\.com/i.test(apiBaseUrl)) {
+    // Blindot-like compatible endpoints can still support image_url, so do not reject here.
+  }
+
   const arrayBuffer = await file.arrayBuffer();
-  const bytes = new Uint8Array(arrayBuffer);
-  let binary = "";
-  for (const byte of bytes) binary += String.fromCharCode(byte);
-  const base64Image = btoa(binary);
+  const base64Image = arrayBufferToBase64(arrayBuffer);
+  const mimeType = file.type && /^image\//.test(file.type) ? file.type : "image/png";
 
   const prompt = [
     "你是专业光学乐谱识别引擎。",
@@ -79,7 +95,7 @@ async function parseWithOpenAI(file, apiKey) {
             {
               type: "image_url",
               image_url: {
-                url: `data:${file.type || "image/png"};base64,${base64Image}`
+                url: `data:${mimeType};base64,${base64Image}`
               }
             }
           ]

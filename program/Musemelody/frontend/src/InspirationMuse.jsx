@@ -570,8 +570,16 @@ export default function InspirationMuse({ embedded = false }) {
         setImprovisation([]);
         setApiAnalysis("");
         const parserMode = data?.debug?.parser === "openai-gpt-4o" ? "AI 识别" : "占位识别";
-        const parserReason = data?.debug?.reason
-          ? ` 原因：${String(data.debug.reason).slice(0, 320)}`
+        const rawReason = data?.debug?.reason ? String(data.debug.reason) : "";
+        const readableReason = rawReason.includes("does not guarantee OpenAI image input compatibility")
+          ? "当前配置的兼容接口暂不支持图像输入识别，已自动切换到占位识别流程。"
+          : rawReason.includes("does not represent a valid image")
+            ? "上传的图片未被识别为有效图像，请尝试 PNG 或 JPG 格式，并确保图片清晰可见。"
+            : rawReason.includes("Error while downloading")
+              ? "远程图像下载失败，兼容接口未成功获取图片内容。"
+              : rawReason;
+        const parserReason = readableReason
+          ? ` 原因：${readableReason.slice(0, 320)}`
           : "";
         setUploadHint(data.message || "已成功载入旋律内容。");
         setToast(`图片识别完成，旋律内容已载入。当前使用：${parserMode}。${parserReason}`);
