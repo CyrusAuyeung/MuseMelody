@@ -4,6 +4,7 @@ node_modules/
 Group2Project.docx
 artifacts/
 *.zip
+new/
 
 # Extracted program junk and caches
 program/__MACOSX/

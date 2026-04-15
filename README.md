@@ -35,11 +35,14 @@ MuseMelody 当前主要服务这类场景：
 4. 试听与导出
    支持试听原旋律、生成旋律、合并结果，并导出 MIDI 文件。
 
+5. 图片识别接入
+  当前站点已接入兼容 OpenAI API 的图片识别链路，并保留回退占位流程，确保页面整体可用。
+
 ## 核心能力
 
 - 旋律续写与即兴生成
 - 和声方向建议
-- 乐谱图片输入占位识别
+- 乐谱图片输入识别与回退占位流程
 - 网页内即时试听
 - MIDI 导出
 - 首页内嵌成熟工作台体验
@@ -106,6 +109,8 @@ scripts/
 ### 站内 API
 
 - [functions/api/score/parse.js](functions/api/score/parse.js)
+- [functions/api/score/temp/upload.js](functions/api/score/temp/upload.js)
+- [functions/api/score/temp/[token].js](functions/api/score/temp/%5Btoken%5D.js)
 - [functions/api/improv/generate.js](functions/api/improv/generate.js)
 - [functions/api/midi/export.js](functions/api/midi/export.js)
 
@@ -162,8 +167,16 @@ npm run build:studio
 - Cloudflare Pages 静态前端
 - Cloudflare Pages Functions API
 - 嵌入首页的成熟服务构建产物
+- 兼容 OpenAI API 的图片识别接入方式
 
 仓库中的 [program/Musemelody/backend](program/Musemelody/backend) 保留了原始 Python/FastAPI 参考实现。
+
+当前图片识别流程已经支持：
+
+- 通过环境变量配置 `OPENAI_API_KEY`
+- 通过环境变量配置兼容端点 `OPENAI_BASE_URL`
+- 通过环境变量配置模型名 `OPENAI_MODEL`
+- 在识别失败时自动回退到占位识别流程
 
 ## 路线图
 
