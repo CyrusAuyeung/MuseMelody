@@ -7,7 +7,7 @@ This repository contains:
 - The public-facing product homepage
 - The embedded studio experience
 - Cloudflare Pages Functions used by the site
-- The original `program/Musemelody` source tree retained for reference and continued development
+- The `studio-source` source tree retained for continued development of the embedded studio
 
 ## Before You Start
 
@@ -28,7 +28,7 @@ npm install
 ### Install studio frontend dependencies
 
 ```bash
-cd program/Musemelody/frontend
+cd studio-source/frontend
 npm install
 ```
 

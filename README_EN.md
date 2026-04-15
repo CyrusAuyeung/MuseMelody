@@ -81,10 +81,9 @@ functions/
     score/parse.js        Score parsing endpoint
     improv/generate.js    Melody generation endpoint
     midi/export.js        MIDI export endpoint
-program/
-  Musemelody/
-    frontend/             Main studio frontend source (Vite + React)
-    backend/              Original Python/FastAPI reference implementation
+studio-source/
+  frontend/               Main studio frontend source (Vite + React)
+  backend/                Original Python/FastAPI reference implementation
 scripts/
   build-studio.mjs        Builds the studio and injects it into the homepage
 ```
@@ -98,10 +97,10 @@ scripts/
 
 ### Studio source
 
-- [program/Musemelody/frontend/src/InspirationMuse.jsx](program/Musemelody/frontend/src/InspirationMuse.jsx)
-- [program/Musemelody/frontend/src/App.jsx](program/Musemelody/frontend/src/App.jsx)
-- [program/Musemelody/frontend/src/embed.jsx](program/Musemelody/frontend/src/embed.jsx)
-- [program/Musemelody/frontend/vite.config.js](program/Musemelody/frontend/vite.config.js)
+- [studio-source/frontend/src/InspirationMuse.jsx](studio-source/frontend/src/InspirationMuse.jsx)
+- [studio-source/frontend/src/App.jsx](studio-source/frontend/src/App.jsx)
+- [studio-source/frontend/src/embed.jsx](studio-source/frontend/src/embed.jsx)
+- [studio-source/frontend/vite.config.js](studio-source/frontend/vite.config.js)
 
 ### Site APIs
 
@@ -120,7 +119,7 @@ npm install
 ### 2. Install studio frontend dependencies
 
 ```bash
-cd program/Musemelody/frontend
+cd studio-source/frontend
 npm install
 ```
 
@@ -147,7 +146,7 @@ Recommended configuration:
 - Build command: leave empty
 - Build output directory: `public`
 
-Whenever you update the studio frontend source under `program/Musemelody/frontend/`, rebuild it before deployment:
+Whenever you update the studio frontend source under `studio-source/frontend/`, rebuild it before deployment:
 
 ```bash
 npm run build:studio
@@ -161,7 +160,7 @@ The current online version uses:
 - Cloudflare Pages Functions APIs
 - Embedded studio build output injected into the homepage
 
-The original [program/Musemelody/backend](program/Musemelody/backend) remains in the repository as a Python/FastAPI reference implementation.
+The original [studio-source/backend](studio-source/backend) remains in the repository as a Python/FastAPI reference implementation.
 
 ## Roadmap
 

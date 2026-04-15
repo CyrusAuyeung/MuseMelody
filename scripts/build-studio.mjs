@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const repoRoot = resolve(__dirname, "..");
-const frontendRoot = join(repoRoot, "program", "Musemelody", "frontend");
+const frontendRoot = join(repoRoot, "studio-source", "frontend");
 const distRoot = join(frontendRoot, "dist");
 const studioRoot = join(repoRoot, "public", "studio");
 const homepagePath = join(repoRoot, "public", "index.html");

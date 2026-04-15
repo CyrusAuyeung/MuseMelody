@@ -84,10 +84,9 @@ functions/
     score/parse.js        乐谱图片解析接口
     improv/generate.js    旋律生成接口
     midi/export.js        MIDI 导出接口
-program/
-  Musemelody/
-    frontend/             成熟服务前端源码（Vite + React）
-    backend/              原始 Python/FastAPI 参考实现
+studio-source/
+  frontend/               成熟服务前端源码（Vite + React）
+  backend/                原始 Python/FastAPI 参考实现
 scripts/
   build-studio.mjs        构建服务并注入首页的脚本
 ```
@@ -101,10 +100,10 @@ scripts/
 
 ### 成熟服务源码
 
-- [program/Musemelody/frontend/src/InspirationMuse.jsx](program/Musemelody/frontend/src/InspirationMuse.jsx)
-- [program/Musemelody/frontend/src/App.jsx](program/Musemelody/frontend/src/App.jsx)
-- [program/Musemelody/frontend/src/embed.jsx](program/Musemelody/frontend/src/embed.jsx)
-- [program/Musemelody/frontend/vite.config.js](program/Musemelody/frontend/vite.config.js)
+- [studio-source/frontend/src/InspirationMuse.jsx](studio-source/frontend/src/InspirationMuse.jsx)
+- [studio-source/frontend/src/App.jsx](studio-source/frontend/src/App.jsx)
+- [studio-source/frontend/src/embed.jsx](studio-source/frontend/src/embed.jsx)
+- [studio-source/frontend/vite.config.js](studio-source/frontend/vite.config.js)
 
 ### 站内 API
 
@@ -125,7 +124,7 @@ npm install
 ### 2. 安装成熟服务前端依赖
 
 ```bash
-cd program/Musemelody/frontend
+cd studio-source/frontend
 npm install
 ```
 
@@ -152,7 +151,7 @@ npm run dev
 - Build command: 留空
 - Build output directory: `public`
 
-当你更新 `program/Musemelody/frontend/` 中的成熟服务源码后，请先执行：
+当你更新 `studio-source/frontend/` 中的成熟服务源码后，请先执行：
 
 ```bash
 npm run build:studio
@@ -169,7 +168,7 @@ npm run build:studio
 - 嵌入首页的成熟服务构建产物
 - 兼容 OpenAI API 的图片识别接入方式
 
-仓库中的 [program/Musemelody/backend](program/Musemelody/backend) 保留了原始 Python/FastAPI 参考实现。
+仓库中的 [studio-source/backend](studio-source/backend) 保留了原始 Python/FastAPI 参考实现。
 
 当前图片识别流程已经支持：
 
