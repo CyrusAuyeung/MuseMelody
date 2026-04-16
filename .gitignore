@@ -4,6 +4,7 @@ node_modules/
 Group2Project.docx
 artifacts/
 *.zip
+musemelody_bass_staff_patch/
 
 # Extracted program junk and caches
 **/.DS_Store

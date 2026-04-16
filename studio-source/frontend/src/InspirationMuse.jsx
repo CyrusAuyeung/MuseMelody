@@ -575,25 +575,46 @@ export default function InspirationMuse({ embedded = false }) {
       const normalizedFile = await normalizeImageFile(file);
       const form = new FormData();
       form.append("file", normalizedFile);
+      form.append("score_type", "piano_grand_staff");
       const response = await fetch(`${API_BASE}/api/score/parse`, { method: "POST", body: form });
       const data = await response.json();
-      const detected = (Array.isArray(data.notes) && data.notes.length
-        ? data.notes.map((n) => ({
-            midi: n.pitch_midi,
-            duration: n.duration_beat || 1,
-            beat: n.start_beat || 0,
-          }))
-        : (data.detected || []).map((n) => ({
-            midi: n.midi,
-            duration: n.duration || 1,
-            beat: n.beat || 0,
-          }))
+      const flattenedFromStaves = Array.isArray(data.staves)
+        ? data.staves.flatMap((staffBlock) =>
+            (staffBlock.notes || []).map((n) => ({
+              midi: n.pitch_midi,
+              duration: n.duration_beat || 1,
+              beat: n.start_beat || 0,
+              staff: staffBlock.staff || n.staff || "treble",
+              clef: staffBlock.clef || n.clef || "G",
+            }))
+          )
+        : [];
+
+      const detected = (
+        flattenedFromStaves.length
+          ? flattenedFromStaves
+          : (Array.isArray(data.notes) && data.notes.length
+              ? data.notes.map((n) => ({
+                  midi: n.pitch_midi,
+                  duration: n.duration_beat || 1,
+                  beat: n.start_beat || 0,
+                  staff: n.staff || "treble",
+                  clef: n.clef || "G",
+                }))
+              : (data.detected || []).map((n) => ({
+                  midi: n.midi,
+                  duration: n.duration || 1,
+                  beat: n.beat || 0,
+                  staff: n.staff || "treble",
+                  clef: n.clef || "G",
+                })))
       );
       if (detected.length) {
         setMelody(detected);
         setImprovisation([]);
         setApiAnalysis("");
-        const parserMode = data?.debug?.parser === "openai-gpt-4o" ? "AI 识别" : "占位识别";
+        const parserName = String(data?.debug?.parser || "");
+        const parserMode = parserName.startsWith("openai-compatible:") ? "AI 识别" : "占位识别";
         const rawReason = data?.debug?.reason ? String(data.debug.reason) : "";
         const readableReason = rawReason.includes("does not guarantee OpenAI image input compatibility")
           ? "当前配置的兼容接口暂不支持图像输入识别，已自动切换到占位识别流程。"

@@ -35,11 +35,14 @@ The current online version already provides a complete product flow:
 4. Preview and export
    Listen to the original melody, generated melody, merged playback, and export MIDI.
 
+5. Score parsing integration
+  The live site now supports an OpenAI-compatible score parsing path with piano grand staff hints, `staves + notes` output, and a fallback placeholder flow.
+
 ## Core Capabilities
 
 - Melody continuation and improvisation generation
 - Harmony direction suggestions
-- Placeholder score-image parsing flow
+- Score-image parsing with dual `staves + notes` output and fallback behavior
 - In-browser audio preview
 - MIDI export
 - Embedded studio experience directly inside the homepage
@@ -105,8 +108,16 @@ scripts/
 ### Site APIs
 
 - [functions/api/score/parse.js](functions/api/score/parse.js)
+- [functions/api/score/temp/upload.js](functions/api/score/temp/upload.js)
+- [functions/api/score/temp/[token].js](functions/api/score/temp/%5Btoken%5D.js)
 - [functions/api/improv/generate.js](functions/api/improv/generate.js)
 - [functions/api/midi/export.js](functions/api/midi/export.js)
+
+The parsing API now supports:
+
+- `score_type` hints
+- dual `staves + notes` output
+- backward-compatible top-level `notes`
 
 ## Local Development
 
@@ -159,8 +170,17 @@ The current online version uses:
 - Cloudflare Pages static frontend
 - Cloudflare Pages Functions APIs
 - Embedded studio build output injected into the homepage
+- OpenAI-compatible score parsing integration
 
 The original [studio-source/backend](studio-source/backend) remains in the repository as a Python/FastAPI reference implementation.
+
+The current score parsing path also supports:
+
+- environment-based `OPENAI_API_KEY`
+- environment-based `OPENAI_BASE_URL`
+- environment-based `OPENAI_MODEL`
+- grand-staff hints for piano images
+- structured `treble / bass` output when available
 
 ## Roadmap
 

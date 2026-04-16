@@ -10,7 +10,7 @@ const NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", 
 
 function midiToPitchName(midi) {
   const octave = Math.floor(midi / 12) - 1;
-  const noteName = NOTE_NAMES[midi % 12];
+  const noteName = NOTE_NAMES[((midi % 12) + 12) % 12];
   return `${noteName}${octave}`;
 }
 
@@ -28,19 +28,36 @@ function arrayBufferToBase64(arrayBuffer) {
 }
 
 function fallbackResponse(filename) {
+  const trebleNotes = FALLBACK_NOTES.map((note) => ({
+    pitch_midi: note.midi,
+    pitch_name: midiToPitchName(note.midi),
+    start_beat: note.beat,
+    duration_beat: note.duration,
+    string: null,
+    fret: null,
+    staff: "treble",
+    clef: "G"
+  }));
+
   return {
     source_type: "staff",
     tempo: 120,
     time_signature: "4/4",
-    notes: FALLBACK_NOTES.map((note) => ({
-      pitch_midi: note.midi,
-      pitch_name: midiToPitchName(note.midi),
-      start_beat: note.beat,
-      duration_beat: note.duration,
-      string: null,
-      fret: null
+    staves: [
+      {
+        staff: "treble",
+        clef: "G",
+        notes: trebleNotes
+      }
+    ],
+    notes: trebleNotes,
+    detected: trebleNotes.map((note) => ({
+      midi: note.pitch_midi,
+      duration: note.duration_beat,
+      beat: note.start_beat,
+      staff: note.staff,
+      clef: note.clef
     })),
-    detected: FALLBACK_NOTES,
     debug: {
       input_file: filename,
       parser: "fallback",
@@ -60,16 +77,26 @@ async function parseWithOpenAI({ file, apiKey, imageUrl, arrayBuffer }) {
 
   const prompt = [
     "你是专业光学乐谱识别引擎。",
-    "请识别这张五线谱图片，并输出严格 JSON。",
+    "请识别这张乐谱图片，并输出严格 JSON。",
     "不要输出 markdown，不要输出解释。",
+    "如果图片中存在钢琴大谱表或上下两个谱表，必须同时返回 treble 和 bass 两个谱表，绝对不要忽略低音谱表。",
+    "如果只检测到单行五线谱，则只返回一个 staff。",
+    "请尽量保持从左到右、按拍子递增的 start_beat；duration_beat 用四分音符为 1。",
     "返回格式：",
     "{",
     '  "tempo": number | null,',
     '  "time_signature": string | null,',
-    '  "notes": [',
-    '    { "pitch_midi": number, "start_beat": number, "duration_beat": number }',
+    '  "staves": [',
+    '    {',
+    '      "staff": "treble" | "bass",',
+    '      "clef": "G" | "F",',
+    '      "notes": [',
+    '        { "pitch_midi": number, "start_beat": number, "duration_beat": number }',
+    '      ]',
+    '    }',
     '  ]',
-    "}"
+    "}",
+    "如果模型无法稳定分辨节奏，也要优先把高音和低音的音高识别出来，并给出尽量合理的 start_beat / duration_beat。"
   ].join("\n");
 
   const response = await fetch(`${apiBaseUrl}/chat/completions`, {
@@ -113,35 +140,103 @@ async function parseWithOpenAI({ file, apiKey, imageUrl, arrayBuffer }) {
   const data = await response.json();
   const content = data?.choices?.[0]?.message?.content;
   const parsed = JSON.parse(content || "{}");
-  const notes = Array.isArray(parsed.notes) ? parsed.notes : [];
-  if (!notes.length) {
+
+  const normalizeStaffName = (staff, clef) => {
+    const raw = String(staff ?? clef ?? "").toLowerCase();
+    if (raw.includes("bass") || raw === "f" || raw.includes("低音")) return "bass";
+    if (raw.includes("treble") || raw === "g" || raw.includes("高音")) return "treble";
+    return "treble";
+  };
+
+  const normalizeClef = (clef, staff) => {
+    const raw = String(clef ?? staff ?? "").toLowerCase();
+    if (raw === "f" || raw.includes("bass") || raw.includes("低音")) return "F";
+    if (raw === "g" || raw.includes("treble") || raw.includes("高音")) return "G";
+    return normalizeStaffName(staff, clef) === "bass" ? "F" : "G";
+  };
+
+  const normalizeFlatNotes = (notes, fallbackStaff = "treble", fallbackClef = "G") => {
+    if (!Array.isArray(notes)) return [];
+    return notes
+      .map((note) => {
+        const pitchMidi = Number(note?.pitch_midi);
+        if (!Number.isFinite(pitchMidi)) return null;
+
+        const staff = normalizeStaffName(note?.staff ?? fallbackStaff, note?.clef ?? fallbackClef);
+        const clef = normalizeClef(note?.clef ?? fallbackClef, staff);
+
+        return {
+          pitch_midi: pitchMidi,
+          pitch_name: midiToPitchName(pitchMidi),
+          start_beat: Number(note?.start_beat ?? 0),
+          duration_beat: Number(note?.duration_beat ?? 1),
+          string: null,
+          fret: null,
+          staff,
+          clef
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.start_beat - b.start_beat || a.pitch_midi - b.pitch_midi);
+  };
+
+  const normalizeStaves = (rawStaves) => {
+    if (!Array.isArray(rawStaves)) return [];
+    return rawStaves
+      .map((staffBlock) => {
+        const staff = normalizeStaffName(staffBlock?.staff, staffBlock?.clef);
+        const clef = normalizeClef(staffBlock?.clef, staff);
+        const notes = normalizeFlatNotes(staffBlock?.notes, staff, clef);
+        if (!notes.length) return null;
+        return { staff, clef, notes };
+      })
+      .filter(Boolean);
+  };
+
+  let staves = normalizeStaves(parsed?.staves);
+  let flatNotes = staves.flatMap((staffBlock) => staffBlock.notes || []);
+
+  if (!flatNotes.length && Array.isArray(parsed?.notes)) {
+    flatNotes = normalizeFlatNotes(parsed.notes, "treble", "G");
+    staves = flatNotes.length
+      ? [
+          {
+            staff: "treble",
+            clef: "G",
+            notes: flatNotes
+          }
+        ]
+      : [];
+  }
+
+  if (!flatNotes.length) {
     throw new Error("No notes returned from AI parser");
   }
 
+  const hasBass = staves.some((staffBlock) => staffBlock.staff === "bass");
+
   return {
-    source_type: "staff",
+    source_type: hasBass ? "grand_staff" : "staff",
     tempo: parsed.tempo ?? null,
     time_signature: parsed.time_signature ?? null,
-    notes: notes.map((note) => ({
-      pitch_midi: Number(note.pitch_midi),
-      pitch_name: midiToPitchName(Number(note.pitch_midi)),
-      start_beat: Number(note.start_beat ?? 0),
-      duration_beat: Number(note.duration_beat ?? 1),
-      string: null,
-      fret: null
-    })),
-    detected: notes.map((note) => ({
+    staves,
+    notes: flatNotes,
+    detected: flatNotes.map((note) => ({
       midi: Number(note.pitch_midi),
       duration: Number(note.duration_beat ?? 1),
-      beat: Number(note.start_beat ?? 0)
+      beat: Number(note.start_beat ?? 0),
+      staff: note.staff ?? "treble",
+      clef: note.clef ?? "G"
     })),
     debug: {
       input_file: file.name || "uploaded-file",
       parser: `openai-compatible:${modelName}`,
       base_url: apiBaseUrl,
-      image_mode: "data-url"
+      image_mode: "data-url",
+      detected_staff_count: staves.length,
+      has_bass_staff: hasBass
     },
-    message: "乐谱识别完成。"
+    message: hasBass ? "乐谱识别完成（已包含高音与低音谱表）。" : "乐谱识别完成。"
   };
 }
 

@@ -36,13 +36,13 @@ MuseMelody 当前主要服务这类场景：
    支持试听原旋律、生成旋律、合并结果，并导出 MIDI 文件。
 
 5. 图片识别接入
-  当前站点已接入兼容 OpenAI API 的图片识别链路，并保留回退占位流程，确保页面整体可用。
+  当前站点已接入兼容 OpenAI API 的图片识别链路，并支持钢琴大谱表提示、`staves + notes` 双结构返回，以及回退占位流程。
 
 ## 核心能力
 
 - 旋律续写与即兴生成
 - 和声方向建议
-- 乐谱图片输入识别与回退占位流程
+- 乐谱图片输入识别、双谱表结构输出与回退占位流程
 - 网页内即时试听
 - MIDI 导出
 - 首页内嵌成熟工作台体验
@@ -113,6 +113,12 @@ scripts/
 - [functions/api/improv/generate.js](functions/api/improv/generate.js)
 - [functions/api/midi/export.js](functions/api/midi/export.js)
 
+其中 `score/parse` 现在支持：
+
+- `score_type` 提示参数
+- `staves + notes` 双结构返回
+- 顶层 `notes` 的向后兼容
+
 ## 本地运行
 
 ### 1. 安装根项目依赖
@@ -175,6 +181,8 @@ npm run build:studio
 - 通过环境变量配置 `OPENAI_API_KEY`
 - 通过环境变量配置兼容端点 `OPENAI_BASE_URL`
 - 通过环境变量配置模型名 `OPENAI_MODEL`
+- 通过 `score_type` 提示引导钢琴大谱表识别
+- 返回 `treble / bass` 双谱表结构（当识别成功时）
 - 在识别失败时自动回退到占位识别流程
 
 ## 路线图
