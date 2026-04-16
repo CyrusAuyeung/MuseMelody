@@ -453,6 +453,15 @@ function ParsedPitchSummary({ staves }) {
     return "来源: unknown";
   };
 
+  const summarizeStaffPositions = (notes) => {
+    const positions = (notes || [])
+      .map((note) => note?.staff_position)
+      .filter((value) => Number.isFinite(Number(value)))
+      .map((value) => Number(value));
+    if (!positions.length) return null;
+    return `staff_position: ${positions.join(" | ")}`;
+  };
+
   return (
     <div style={{ marginTop: 12, padding: "12px 14px", borderRadius: 12, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)" }}>
       <div style={{ fontSize: 12, color: "#d8d2ea", marginBottom: 8 }}>
@@ -462,11 +471,13 @@ function ParsedPitchSummary({ staves }) {
         {staves.map((staffBlock, index) => {
           const rawNotes = staffBlock?.notes || [];
           const notes = rawNotes.map((note) => normalizePitchName(note));
+          const positionSummary = summarizeStaffPositions(rawNotes);
           const staffLabel = staffBlock?.staff === "bass" ? "低音谱表 Bass" : "高音谱表 Treble";
           return (
             <div key={`${staffBlock?.staff || "staff"}-${index}`}>
               <div style={{ fontSize: 12, color: "#bfb4d8", marginBottom: 4 }}>{staffLabel}</div>
               <div style={{ fontSize: 11, color: "#8dbbf5", marginBottom: 4 }}>{summarizePitchSource(rawNotes)}</div>
+              {positionSummary && <div style={{ fontSize: 11, color: "#9dc7b8", marginBottom: 4 }}>{positionSummary}</div>}
               <div style={{ fontSize: 13, color: "#f5efff", fontFamily: "monospace", lineHeight: 1.7, wordBreak: "break-word" }}>
                 {notes.length ? notes.join("  |  ") : "无可用音符"}
               </div>

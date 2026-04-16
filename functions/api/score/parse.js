@@ -148,6 +148,8 @@ async function parseWithOpenAI({ file, apiKey, imageUrl, arrayBuffer, scoreType 
     "比起直接猜测音名，请优先根据音符在五线谱中的准确位置来判断音高。",
     "每个音符必须尽量返回 staff_position：以该谱表最底线为 0，最底线和第二线之间的空格为 1，第二线为 2，依此类推；下加线区域用负数，上加线区域用大于 8 的整数。",
     "高音谱号 G 的最底线是 E4；低音谱号 F 的最底线是 G2。",
+    "高音谱号示例：staff_position = -2 表示 C4（下加一线），-1 表示 D4（底线下方空格），0 表示 E4（最底线），1 表示 F4，2 表示 G4。",
+    "低音谱号示例：staff_position = -1 表示 F2（最底线下方空格），0 表示 G2（最底线），1 表示 A2，2 表示 B2，3 表示 C3。",
     "如果没有临时记号，accidental 返回 null；有升号返回 #，有降号返回 b，还原记号返回 natural。",
     "请尽量保持从左到右、按拍子递增的 start_beat；duration_beat 用四分音符为 1。",
     "返回格式：",

@@ -3,6 +3,7 @@ node_modules/
 *.log
 Group2Project.docx
 artifacts/
+image/
 *.zip
 musemelody_bass_staff_patch/
 
