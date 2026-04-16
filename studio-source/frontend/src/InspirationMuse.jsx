@@ -274,32 +274,88 @@ class AudioEngine {
 // ══════════════════════════════════════════════
 
 function StaffNotation({ notes, staves = null, highlightIndex = -1, label = "", color = "#d4a0ff" }) {
-  const normalizedStaves = Array.isArray(staves) && staves.length
+  const toUiNote = (note, fallbackStaff = "treble", fallbackClef = "G") => {
+    const midi = Number(note?.midi ?? note?.pitch_midi);
+    if (!Number.isFinite(midi)) return null;
+
+    return {
+      midi,
+      beat: Number(note?.beat ?? note?.start_beat ?? 0),
+      duration: Number(note?.duration ?? note?.duration_beat ?? 1),
+      isRest: Boolean(note?.isRest),
+      isGrace: Boolean(note?.isGrace),
+      staff: note?.staff || fallbackStaff,
+      clef: note?.clef || fallbackClef,
+    };
+  };
+
+  const normalizedStaves = (Array.isArray(staves) && staves.length
     ? staves
-    : [{ staff: "treble", clef: "G", notes: notes || [] }];
+    : [{ staff: "treble", clef: "G", notes: notes || [] }])
+    .map((staffBlock) => {
+      const normalizedNotes = (staffBlock?.notes || [])
+        .map((note) => toUiNote(note, staffBlock?.staff || "treble", staffBlock?.clef || "G"))
+        .filter(Boolean)
+        .sort((left, right) => left.beat - right.beat || left.midi - right.midi);
+
+      return {
+        staff: staffBlock?.staff || "treble",
+        clef: staffBlock?.clef || (staffBlock?.staff === "bass" ? "F" : "G"),
+        notes: normalizedNotes,
+      };
+    })
+    .filter((staffBlock) => staffBlock.notes.length);
 
   const W = 800;
   const H = normalizedStaves.length > 1 ? 260 : 160;
-  const margin = 60;
+  const leftPadding = 74;
+  const rightPadding = 28;
   const lineSpacing = 10;
   const staffSpacing = 110;
 
   const allPlayableNotes = normalizedStaves.flatMap((staffBlock) => (staffBlock.notes || []).filter((note) => !note.isRest));
   if (!allPlayableNotes.length) return null;
 
-  const noteSpacing = Math.min(40, (W - margin * 2) / Math.max(allPlayableNotes.length, 1));
+  const totalBeats = Math.max(
+    4,
+    ...allPlayableNotes.map((note) => note.beat + Math.max(note.duration, 0.5))
+  );
+  const beatSpacing = Math.min(42, Math.max(26, (W - leftPadding - rightPadding) / totalBeats));
 
-  const noteMap = { 0:0,1:0.5,2:1,3:1.5,4:2,5:3,6:3.5,7:4,8:4.5,9:5,10:5.5,11:6 };
+  const diatonicIndexMap = {
+    0: 0,
+    1: 0,
+    2: 1,
+    3: 1,
+    4: 2,
+    5: 3,
+    6: 3,
+    7: 4,
+    8: 4,
+    9: 5,
+    10: 5,
+    11: 6,
+  };
+
+  const getDiatonicIndex = (midi) => {
+    const pitchClass = ((midi % 12) + 12) % 12;
+    const octave = Math.floor(midi / 12) - 1;
+    return octave * 7 + diatonicIndexMap[pitchClass];
+  };
 
   const midiToY = (midi, staffBaseY, clef = "G") => {
-    const pc = midi % 12;
-    const oct = Math.floor(midi / 12) - 1;
-    const semitonePos = noteMap[pc] + (oct - 4) * 7;
-    const offset = clef === "F" ? -12 : 0;
-    return staffBaseY + 4 * lineSpacing - (semitonePos + offset) * (lineSpacing / 2);
+    const bottomLineDiatonic = clef === "F"
+      ? (2 * 7 + 4) // G2
+      : (4 * 7 + 2); // E4
+    const bottomLineY = staffBaseY + 4 * lineSpacing;
+    return bottomLineY - (getDiatonicIndex(midi) - bottomLineDiatonic) * (lineSpacing / 2);
   };
 
   const isSharp = (midi) => [1,3,6,8,10].includes(midi % 12);
+  const noteToX = (note, index) => {
+    const beat = Number.isFinite(note.beat) ? note.beat : index;
+    return leftPadding + beat * beatSpacing + beatSpacing * 0.5;
+  };
 
   return (
     <div style={{ marginBottom: 16 }}>
@@ -319,8 +375,23 @@ function StaffNotation({ notes, staves = null, highlightIndex = -1, label = "", 
 
               <text x={10} y={staffTop + 32} fill="rgba(255,255,255,0.3)" fontSize={42} fontFamily="serif">{clefSymbol}</text>
 
+              {Array.from({ length: Math.ceil(totalBeats) + 1 }, (_, beatIndex) => {
+                const x = leftPadding + beatIndex * beatSpacing;
+                return (
+                  <line
+                    key={`beat-${beatIndex}`}
+                    x1={x}
+                    y1={staffTop - 4}
+                    x2={x}
+                    y2={staffTop + 4 * lineSpacing + 4}
+                    stroke="rgba(255,255,255,0.045)"
+                    strokeWidth={1}
+                  />
+                );
+              })}
+
               {playableNotes.map((note, i) => {
-                const x = margin + i * noteSpacing;
+                const x = noteToX(note, i);
                 const y = midiToY(note.midi, staffTop, staffBlock.clef || "G");
                 const isHighlighted = note.staff
                   ? false
