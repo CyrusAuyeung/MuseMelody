@@ -273,21 +273,30 @@ class AudioEngine {
 //  STAFF NOTATION RENDERER (SVG)
 // ══════════════════════════════════════════════
 
-function StaffNotation({ notes, highlightIndex = -1, label = "", color = "#d4a0ff" }) {
-  if (!notes || !notes.length) return null;
-  const playableNotes = notes.filter(n => !n.isRest);
+function StaffNotation({ notes, staves = null, highlightIndex = -1, label = "", color = "#d4a0ff" }) {
+  const normalizedStaves = Array.isArray(staves) && staves.length
+    ? staves
+    : [{ staff: "treble", clef: "G", notes: notes || [] }];
 
-  const W = 800, H = 160, margin = 60, staffTop = 30;
+  const W = 800;
+  const H = normalizedStaves.length > 1 ? 260 : 160;
+  const margin = 60;
   const lineSpacing = 10;
-  const noteSpacing = Math.min(40, (W - margin * 2) / Math.max(playableNotes.length, 1));
+  const staffSpacing = 110;
 
-  // MIDI to staff Y position (treble clef, middle C = ledger line below)
-  const midiToY = (midi) => {
-    const noteMap = { 0:0,1:0.5,2:1,3:1.5,4:2,5:3,6:3.5,7:4,8:4.5,9:5,10:5.5,11:6 };
+  const allPlayableNotes = normalizedStaves.flatMap((staffBlock) => (staffBlock.notes || []).filter((note) => !note.isRest));
+  if (!allPlayableNotes.length) return null;
+
+  const noteSpacing = Math.min(40, (W - margin * 2) / Math.max(allPlayableNotes.length, 1));
+
+  const noteMap = { 0:0,1:0.5,2:1,3:1.5,4:2,5:3,6:3.5,7:4,8:4.5,9:5,10:5.5,11:6 };
+
+  const midiToY = (midi, staffBaseY, clef = "G") => {
     const pc = midi % 12;
     const oct = Math.floor(midi / 12) - 1;
     const semitonePos = noteMap[pc] + (oct - 4) * 7;
-    return staffTop + 4 * lineSpacing - semitonePos * (lineSpacing / 2);
+    const offset = clef === "F" ? -12 : 0;
+    return staffBaseY + 4 * lineSpacing - (semitonePos + offset) * (lineSpacing / 2);
   };
 
   const isSharp = (midi) => [1,3,6,8,10].includes(midi % 12);
@@ -296,63 +305,58 @@ function StaffNotation({ notes, highlightIndex = -1, label = "", color = "#d4a0f
     <div style={{ marginBottom: 16 }}>
       {label && <div style={{ fontSize: 13, color: "#aaa", marginBottom: 4, fontFamily: "'Cormorant Garamond', serif" }}>{label}</div>}
       <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", background: "rgba(255,255,255,0.03)", borderRadius: 8, border: "1px solid rgba(255,255,255,0.06)" }}>
-        {/* Staff lines */}
-        {[0,1,2,3,4].map(i => (
-          <line key={i} x1={30} y1={staffTop + i * lineSpacing} x2={W - 20} y2={staffTop + i * lineSpacing}
-            stroke="rgba(255,255,255,0.15)" strokeWidth={1} />
-        ))}
-
-        {/* Treble clef symbol */}
-        <text x={10} y={staffTop + 32} fill="rgba(255,255,255,0.3)" fontSize={42} fontFamily="serif">𝄞</text>
-
-        {/* Notes */}
-        {playableNotes.map((note, i) => {
-          const x = margin + i * noteSpacing;
-          const y = midiToY(note.midi);
-          const isHighlighted = notes.indexOf(note) === highlightIndex;
-          const noteColor = isHighlighted ? "#fff" : color;
-          const r = note.isGrace ? 3 : 5;
-
-          // Determine if note needs ledger lines
-          const ledgerLines = [];
-          if (y > staffTop + 4 * lineSpacing) {
-            for (let ly = staffTop + 5 * lineSpacing; ly <= y + 2; ly += lineSpacing)
-              ledgerLines.push(ly);
-          }
-          if (y < staffTop) {
-            for (let ly = staffTop - lineSpacing; ly >= y - 2; ly -= lineSpacing)
-              ledgerLines.push(ly);
-          }
+        {normalizedStaves.map((staffBlock, staffIndex) => {
+          const staffTop = 30 + staffIndex * staffSpacing;
+          const clefSymbol = staffBlock.clef === "F" ? "𝄢" : "𝄞";
+          const playableNotes = (staffBlock.notes || []).filter((note) => !note.isRest);
 
           return (
-            <g key={i}>
-              {ledgerLines.map((ly, li) => (
-                <line key={li} x1={x - 8} y1={ly} x2={x + 8} y2={ly} stroke="rgba(255,255,255,0.12)" strokeWidth={1} />
+            <g key={`${staffBlock.staff}-${staffIndex}`}>
+              {[0,1,2,3,4].map(i => (
+                <line key={i} x1={30} y1={staffTop + i * lineSpacing} x2={W - 20} y2={staffTop + i * lineSpacing}
+                  stroke="rgba(255,255,255,0.15)" strokeWidth={1} />
               ))}
-              {/* Note head */}
-              <ellipse cx={x} cy={y} rx={r} ry={r * 0.75}
-                fill={note.duration >= 2 ? "none" : noteColor}
-                stroke={noteColor} strokeWidth={1.5}
-                style={{ filter: isHighlighted ? `drop-shadow(0 0 6px ${color})` : "none",
-                  transition: "all 0.15s ease" }} />
-              {/* Stem */}
-              {!note.isGrace && (
-                <line x1={x + (y > staffTop + 2 * lineSpacing ? -r : r)}
-                  y1={y} x2={x + (y > staffTop + 2 * lineSpacing ? -r : r)}
-                  y2={y + (y > staffTop + 2 * lineSpacing ? -28 : 28)}
-                  stroke={noteColor} strokeWidth={1.2} />
-              )}
-              {/* Sharp sign */}
-              {isSharp(note.midi) && (
-                <text x={x - 12} y={y + 4} fill={noteColor} fontSize={12} fontFamily="serif">♯</text>
-              )}
-              {/* Glow for highlighted */}
-              {isHighlighted && (
-                <circle cx={x} cy={y} r={12} fill="none" stroke={color} strokeWidth={0.5} opacity={0.5}>
-                  <animate attributeName="r" from="8" to="16" dur="0.6s" repeatCount="indefinite" />
-                  <animate attributeName="opacity" from="0.5" to="0" dur="0.6s" repeatCount="indefinite" />
-                </circle>
-              )}
+
+              <text x={10} y={staffTop + 32} fill="rgba(255,255,255,0.3)" fontSize={42} fontFamily="serif">{clefSymbol}</text>
+
+              {playableNotes.map((note, i) => {
+                const x = margin + i * noteSpacing;
+                const y = midiToY(note.midi, staffTop, staffBlock.clef || "G");
+                const isHighlighted = note.staff
+                  ? false
+                  : (staffBlock.notes || []).indexOf(note) === highlightIndex;
+                const noteColor = isHighlighted ? "#fff" : color;
+                const r = note.isGrace ? 3 : 5;
+
+                const ledgerLines = [];
+                if (y > staffTop + 4 * lineSpacing) {
+                  for (let ly = staffTop + 5 * lineSpacing; ly <= y + 2; ly += lineSpacing) ledgerLines.push(ly);
+                }
+                if (y < staffTop) {
+                  for (let ly = staffTop - lineSpacing; ly >= y - 2; ly -= lineSpacing) ledgerLines.push(ly);
+                }
+
+                return (
+                  <g key={i}>
+                    {ledgerLines.map((ly, li) => (
+                      <line key={li} x1={x - 8} y1={ly} x2={x + 8} y2={ly} stroke="rgba(255,255,255,0.12)" strokeWidth={1} />
+                    ))}
+                    <ellipse cx={x} cy={y} rx={r} ry={r * 0.75}
+                      fill={note.duration >= 2 ? "none" : noteColor}
+                      stroke={noteColor} strokeWidth={1.5}
+                      style={{ filter: isHighlighted ? `drop-shadow(0 0 6px ${color})` : "none", transition: "all 0.15s ease" }} />
+                    {!note.isGrace && (
+                      <line x1={x + (y > staffTop + 2 * lineSpacing ? -r : r)}
+                        y1={y} x2={x + (y > staffTop + 2 * lineSpacing ? -r : r)}
+                        y2={y + (y > staffTop + 2 * lineSpacing ? -28 : 28)}
+                        stroke={noteColor} strokeWidth={1.2} />
+                    )}
+                    {isSharp(note.midi) && (
+                      <text x={x - 12} y={y + 4} fill={noteColor} fontSize={12} fontFamily="serif">♯</text>
+                    )}
+                  </g>
+                );
+              })}
             </g>
           );
         })}
@@ -483,6 +487,7 @@ export default function InspirationMuse({ embedded = false }) {
   ];
   const [phase, setPhase] = useState("input"); // input | analyzing | result
   const [melody, setMelody] = useState([]);
+  const [parsedStaves, setParsedStaves] = useState([]);
   const [analysis, setAnalysis] = useState(null);
   const [improvisation, setImprovisation] = useState([]);
   const [style, setStyle] = useState("jazz");
@@ -525,6 +530,7 @@ export default function InspirationMuse({ embedded = false }) {
       return note;
     });
     setMelody(withBeats);
+    setParsedStaves([]);
     setImprovisation([]);
     setApiAnalysis("");
   };
@@ -538,6 +544,7 @@ export default function InspirationMuse({ embedded = false }) {
       return next;
     });
     setMelody(withBeats);
+    setParsedStaves([]);
     setImprovisation([]);
     setApiAnalysis(`已载入 ${presetName}，你现在可以直接开始生成。`);
     setToast(`已为你载入预设：${presetName}`);
@@ -611,6 +618,7 @@ export default function InspirationMuse({ embedded = false }) {
       );
       if (detected.length) {
         setMelody(detected);
+        setParsedStaves(Array.isArray(data.staves) ? data.staves : []);
         setImprovisation([]);
         setApiAnalysis("");
         const parserName = String(data?.debug?.parser || "");
@@ -1151,7 +1159,7 @@ export default function InspirationMuse({ embedded = false }) {
           {/* Show loaded melody */}
           {melody.length > 0 && (
             <div style={{ marginTop: 16 }}>
-              <StaffNotation notes={melody} label="原始旋律 Original Melody"
+              <StaffNotation notes={melody} staves={parsedStaves} label="原始旋律 Original Melody"
                 highlightIndex={playingWhat === "original" ? highlightIdx : -1} color="#7eb8ff" />
             </div>
           )}
@@ -1232,6 +1240,7 @@ export default function InspirationMuse({ embedded = false }) {
                   <span style={css.badge("#80e8c0")}>BPM: {tempo}</span>
                   <span style={css.badge("#ffd080")}>长度: {bars} 小节</span>
                   <span style={css.badge("#c9a0ff")}>音符数: {improvisation.filter(n => !n.isRest).length}</span>
+                  {parsedStaves.length > 1 && <span style={css.badge("#9fd2ff")}>已识别双谱表</span>}
                 </div>
               )}
               <div style={css.analysisBox}>
