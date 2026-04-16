@@ -445,6 +445,14 @@ function ParsedPitchSummary({ staves }) {
     return Number.isFinite(midi) ? midiToName(midi) : "?";
   };
 
+  const summarizePitchSource = (notes) => {
+    const sourceSet = new Set((notes || []).map((note) => String(note?.pitch_source || "unknown")));
+    if (sourceSet.has("staff_position")) return "来源: staff_position";
+    if (sourceSet.has("pitch_name")) return "来源: pitch_name";
+    if (sourceSet.has("pitch_midi")) return "来源: pitch_midi";
+    return "来源: unknown";
+  };
+
   return (
     <div style={{ marginTop: 12, padding: "12px 14px", borderRadius: 12, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)" }}>
       <div style={{ fontSize: 12, color: "#d8d2ea", marginBottom: 8 }}>
@@ -452,11 +460,13 @@ function ParsedPitchSummary({ staves }) {
       </div>
       <div style={{ display: "grid", gap: 8 }}>
         {staves.map((staffBlock, index) => {
-          const notes = (staffBlock?.notes || []).map((note) => normalizePitchName(note));
+          const rawNotes = staffBlock?.notes || [];
+          const notes = rawNotes.map((note) => normalizePitchName(note));
           const staffLabel = staffBlock?.staff === "bass" ? "低音谱表 Bass" : "高音谱表 Treble";
           return (
             <div key={`${staffBlock?.staff || "staff"}-${index}`}>
               <div style={{ fontSize: 12, color: "#bfb4d8", marginBottom: 4 }}>{staffLabel}</div>
+              <div style={{ fontSize: 11, color: "#8dbbf5", marginBottom: 4 }}>{summarizePitchSource(rawNotes)}</div>
               <div style={{ fontSize: 13, color: "#f5efff", fontFamily: "monospace", lineHeight: 1.7, wordBreak: "break-word" }}>
                 {notes.length ? notes.join("  |  ") : "无可用音符"}
               </div>
