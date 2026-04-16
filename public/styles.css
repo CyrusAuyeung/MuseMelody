@@ -83,7 +83,7 @@ a {
 .brand {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 18px;
 }
 
 .brand-mark {
@@ -95,13 +95,13 @@ a {
 }
 
 .brand-logo {
-  width: 46px;
-  height: 46px;
+  width: 82px;
+  height: 82px;
   object-fit: contain;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 4px;
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.22);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.14);
+  padding: 8px;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.24);
 }
 
 .brand-copy {
@@ -123,14 +123,14 @@ a {
 }
 
 .brand-copy strong {
-  font-size: 1rem;
+  font-size: 1.18rem;
   font-weight: 600;
   letter-spacing: 0.02em;
 }
 
 .brand-copy small {
   color: var(--muted);
-  font-size: 0.82rem;
+  font-size: 0.92rem;
 }
 
 .site-nav {

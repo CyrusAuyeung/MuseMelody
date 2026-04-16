@@ -907,17 +907,17 @@ export default function InspirationMuse({ embedded = false }) {
       display: "inline-flex",
       alignItems: "center",
       justifyContent: "center",
-      gap: 14,
-      marginBottom: 12,
+      gap: 18,
+      marginBottom: 16,
     },
     headerLogo: {
-      width: embedded ? 54 : 66,
-      height: embedded ? 54 : 66,
+      width: embedded ? 92 : 112,
+      height: embedded ? 92 : 112,
       objectFit: "contain",
-      borderRadius: 16,
-      boxShadow: "0 12px 28px rgba(0,0,0,0.22)",
-      background: "rgba(255,255,255,0.08)",
-      padding: 6,
+      borderRadius: 24,
+      boxShadow: "0 20px 44px rgba(0,0,0,0.24)",
+      background: "rgba(255,255,255,0.14)",
+      padding: 10,
     },
     headerBrandText: {
       display: "flex",
@@ -936,7 +936,7 @@ export default function InspirationMuse({ embedded = false }) {
       marginBottom: 4,
     },
     subtitle: {
-      fontSize: 14,
+      fontSize: 15,
       color: "rgba(180,160,220,0.6)",
       letterSpacing: 4,
       textTransform: "uppercase",
@@ -1199,7 +1199,7 @@ export default function InspirationMuse({ embedded = false }) {
             <div style={css.headerBrand}>
               <img src="/studio/logo.png" alt="MuseMelody logo" style={css.headerLogo} />
               <div style={css.headerBrandText}>
-                <h1 style={{ ...css.title, fontSize: 32, marginBottom: 0 }}>MuseMelody</h1>
+                <h1 style={{ ...css.title, fontSize: 38, marginBottom: 0 }}>MuseMelody</h1>
                 <p style={css.subtitle}>AI Music Improvisation Generator</p>
               </div>
             </div>
