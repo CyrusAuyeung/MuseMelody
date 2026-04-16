@@ -24,6 +24,11 @@ rmSync(studioRoot, { recursive: true, force: true });
 mkdirSync(studioRoot, { recursive: true });
 cpSync(distRoot, studioRoot, { recursive: true });
 
+const rootLogoPath = join(repoRoot, "logo.png");
+if (existsSync(rootLogoPath)) {
+  cpSync(rootLogoPath, join(studioRoot, "logo.png"));
+}
+
 const embedJsFile = existsSync(join(studioRoot, "assets"))
   ? readdirSync(join(studioRoot, "assets")).find((file) => /^embed-.*\.js$/.test(file))
   : null;

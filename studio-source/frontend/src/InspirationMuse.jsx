@@ -436,59 +436,6 @@ function StaffNotation({ notes, staves = null, highlightIndex = -1, label = "", 
   );
 }
 
-function ParsedPitchSummary({ staves }) {
-  if (!Array.isArray(staves) || !staves.length) return null;
-
-  const normalizePitchName = (note) => {
-    if (note?.pitch_name) return String(note.pitch_name);
-    const midi = Number(note?.pitch_midi ?? note?.midi);
-    return Number.isFinite(midi) ? midiToName(midi) : "?";
-  };
-
-  const summarizePitchSource = (notes) => {
-    const sourceSet = new Set((notes || []).map((note) => String(note?.pitch_source || "unknown")));
-    if (sourceSet.has("staff_position")) return "来源: staff_position";
-    if (sourceSet.has("pitch_name")) return "来源: pitch_name";
-    if (sourceSet.has("pitch_midi")) return "来源: pitch_midi";
-    return "来源: unknown";
-  };
-
-  const summarizeStaffPositions = (notes) => {
-    const positions = (notes || [])
-      .map((note) => note?.staff_position)
-      .filter((value) => Number.isFinite(Number(value)))
-      .map((value) => Number(value));
-    if (!positions.length) return null;
-    return `staff_position: ${positions.join(" | ")}`;
-  };
-
-  return (
-    <div style={{ marginTop: 12, padding: "12px 14px", borderRadius: 12, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)" }}>
-      <div style={{ fontSize: 12, color: "#d8d2ea", marginBottom: 8 }}>
-        当前识别到的音高数据。若这里的音名就与原图不一致，问题在 AI 识别；若这里正确但五线谱位置不对，问题才在前端绘制。
-      </div>
-      <div style={{ display: "grid", gap: 8 }}>
-        {staves.map((staffBlock, index) => {
-          const rawNotes = staffBlock?.notes || [];
-          const notes = rawNotes.map((note) => normalizePitchName(note));
-          const positionSummary = summarizeStaffPositions(rawNotes);
-          const staffLabel = staffBlock?.staff === "bass" ? "低音谱表 Bass" : "高音谱表 Treble";
-          return (
-            <div key={`${staffBlock?.staff || "staff"}-${index}`}>
-              <div style={{ fontSize: 12, color: "#bfb4d8", marginBottom: 4 }}>{staffLabel}</div>
-              <div style={{ fontSize: 11, color: "#8dbbf5", marginBottom: 4 }}>{summarizePitchSource(rawNotes)}</div>
-              {positionSummary && <div style={{ fontSize: 11, color: "#9dc7b8", marginBottom: 4 }}>{positionSummary}</div>}
-              <div style={{ fontSize: 13, color: "#f5efff", fontFamily: "monospace", lineHeight: 1.7, wordBreak: "break-word" }}>
-                {notes.length ? notes.join("  |  ") : "无可用音符"}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
 // ══════════════════════════════════════════════
 //  WAVEFORM VISUALIZATION
 // ══════════════════════════════════════════════
@@ -956,6 +903,29 @@ export default function InspirationMuse({ embedded = false }) {
       position: "relative",
       zIndex: 1,
     },
+    headerBrand: {
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 14,
+      marginBottom: 12,
+    },
+    headerLogo: {
+      width: embedded ? 54 : 66,
+      height: embedded ? 54 : 66,
+      objectFit: "contain",
+      borderRadius: 16,
+      boxShadow: "0 12px 28px rgba(0,0,0,0.22)",
+      background: "rgba(255,255,255,0.08)",
+      padding: 6,
+    },
+    headerBrandText: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start",
+      textAlign: "left",
+      gap: 2,
+    },
     title: {
       fontSize: 42,
       fontWeight: 300,
@@ -1211,11 +1181,28 @@ export default function InspirationMuse({ embedded = false }) {
         {/* Header */}
         {!embedded && (
           <header style={css.header}>
-            <h1 style={css.title}>MuseMelody</h1>
-            <p style={css.subtitle}>AI Music Improvisation Generator</p>
+            <div style={css.headerBrand}>
+              <img src="/studio/logo.png" alt="MuseMelody logo" style={css.headerLogo} />
+              <div style={css.headerBrandText}>
+                <h1 style={css.title}>MuseMelody</h1>
+                <p style={css.subtitle}>AI Music Improvisation Generator</p>
+              </div>
+            </div>
             <p style={{ fontSize: 12, color: "rgba(160,140,200,0.4)", marginTop: 4, letterSpacing: 2 }}>
               旋律生成 · 和声建议 · 即时试听
             </p>
+          </header>
+        )}
+
+        {embedded && (
+          <header style={css.header}>
+            <div style={css.headerBrand}>
+              <img src="/studio/logo.png" alt="MuseMelody logo" style={css.headerLogo} />
+              <div style={css.headerBrandText}>
+                <h1 style={{ ...css.title, fontSize: 32, marginBottom: 0 }}>MuseMelody</h1>
+                <p style={css.subtitle}>AI Music Improvisation Generator</p>
+              </div>
+            </div>
           </header>
         )}
 
@@ -1359,7 +1346,6 @@ export default function InspirationMuse({ embedded = false }) {
             <div style={{ marginTop: 16 }}>
               <StaffNotation notes={melody} staves={parsedStaves} label="原始旋律 Original Melody"
                 highlightIndex={playingWhat === "original" ? highlightIdx : -1} color="#7eb8ff" />
-              <ParsedPitchSummary staves={parsedStaves} />
             </div>
           )}
 
