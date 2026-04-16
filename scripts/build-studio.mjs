@@ -10,6 +10,7 @@ const frontendRoot = join(repoRoot, "studio-source", "frontend");
 const distRoot = join(frontendRoot, "dist");
 const studioRoot = join(repoRoot, "public", "studio");
 const homepagePath = join(repoRoot, "public", "index.html");
+const studioIndexPath = join(studioRoot, "index.html");
 
 if (!existsSync(frontendRoot)) {
   throw new Error(`Frontend project not found: ${frontendRoot}`);
@@ -27,6 +28,17 @@ cpSync(distRoot, studioRoot, { recursive: true });
 const rootLogoPath = join(repoRoot, "logo.png");
 if (existsSync(rootLogoPath)) {
   cpSync(rootLogoPath, join(studioRoot, "logo.png"));
+}
+
+if (existsSync(studioIndexPath) && existsSync(join(studioRoot, "logo.png"))) {
+  const studioHtml = readFileSync(studioIndexPath, "utf8");
+  const patchedStudioHtml = studioHtml
+    .replace(/\s*<link rel="icon"[^>]*>\s*/g, "\n")
+    .replace(
+      "</head>",
+      "    <link rel=\"icon\" type=\"image/png\" href=\"/studio/logo.png\" />\n    <link rel=\"apple-touch-icon\" href=\"/studio/logo.png\" />\n  </head>"
+    );
+  writeFileSync(studioIndexPath, patchedStudioHtml, "utf8");
 }
 
 const embedJsFile = existsSync(join(studioRoot, "assets"))
