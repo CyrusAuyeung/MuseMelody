@@ -681,20 +681,94 @@ export default function InspirationMuse({ embedded = false }) {
     }
 
     const bitmap = await createImageBitmap(file);
-    const maxWidth = 1600;
-    const scale = bitmap.width > maxWidth ? maxWidth / bitmap.width : 1;
-    const width = Math.max(1, Math.round(bitmap.width * scale));
-    const height = Math.max(1, Math.round(bitmap.height * scale));
+    const sourceCanvas = document.createElement("canvas");
+    sourceCanvas.width = bitmap.width;
+    sourceCanvas.height = bitmap.height;
+    const sourceCtx = sourceCanvas.getContext("2d", { willReadFrequently: true });
+    sourceCtx.fillStyle = "#ffffff";
+    sourceCtx.fillRect(0, 0, bitmap.width, bitmap.height);
+    sourceCtx.drawImage(bitmap, 0, 0);
+
+    const { width: sourceWidth, height: sourceHeight } = sourceCanvas;
+    const imageData = sourceCtx.getImageData(0, 0, sourceWidth, sourceHeight);
+    const { data } = imageData;
+
+    const isLightPixel = (x, y) => {
+      const index = (y * sourceWidth + x) * 4;
+      const r = data[index];
+      const g = data[index + 1];
+      const b = data[index + 2];
+      const alpha = data[index + 3];
+      if (alpha < 16) return false;
+      return (r + g + b) / 3 > 210;
+    };
+
+    let minX = sourceWidth;
+    let minY = sourceHeight;
+    let maxX = -1;
+    let maxY = -1;
+
+    for (let y = 0; y < sourceHeight; y += 1) {
+      for (let x = 0; x < sourceWidth; x += 1) {
+        if (!isLightPixel(x, y)) continue;
+        if (x < minX) minX = x;
+        if (y < minY) minY = y;
+        if (x > maxX) maxX = x;
+        if (y > maxY) maxY = y;
+      }
+    }
+
+    if (maxX < 0 || maxY < 0) {
+      minX = 0;
+      minY = 0;
+      maxX = sourceWidth - 1;
+      maxY = sourceHeight - 1;
+    }
+
+    const contentWidth = maxX - minX + 1;
+    const contentHeight = maxY - minY + 1;
+    const paddingX = Math.max(12, Math.round(contentWidth * 0.03));
+    const paddingY = Math.max(12, Math.round(contentHeight * 0.06));
+    const watermarkTrim = Math.max(0, Math.round(contentHeight * 0.16));
+
+    const cropX = Math.max(0, minX - paddingX);
+    const cropY = Math.max(0, minY - paddingY);
+    const cropRight = Math.min(sourceWidth, maxX + paddingX + 1);
+    const cropBottom = Math.min(sourceHeight, Math.max(cropY + 1, maxY - watermarkTrim + 1));
+    const croppedWidth = Math.max(1, cropRight - cropX);
+    const croppedHeight = Math.max(1, cropBottom - cropY);
+
+    const targetMaxWidth = 1800;
+    const targetMaxHeight = 1200;
+    const scale = Math.min(
+      targetMaxWidth / croppedWidth,
+      targetMaxHeight / croppedHeight,
+      2.4
+    );
+    const width = Math.max(1, Math.round(croppedWidth * scale));
+    const height = Math.max(1, Math.round(croppedHeight * scale));
 
     const canvas = document.createElement("canvas");
     canvas.width = width;
     canvas.height = height;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, width, height);
-    ctx.drawImage(bitmap, 0, 0, width, height);
+    ctx.drawImage(sourceCanvas, cropX, cropY, croppedWidth, croppedHeight, 0, 0, width, height);
 
-    const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png", 0.92));
+    const enhanced = ctx.getImageData(0, 0, width, height);
+    const enhancedPixels = enhanced.data;
+    for (let index = 0; index < enhancedPixels.length; index += 4) {
+      const luminance = 0.299 * enhancedPixels[index] + 0.587 * enhancedPixels[index + 1] + 0.114 * enhancedPixels[index + 2];
+      const normalized = luminance > 200 ? 255 : luminance < 140 ? 0 : Math.round((luminance - 140) * (255 / 60));
+      enhancedPixels[index] = normalized;
+      enhancedPixels[index + 1] = normalized;
+      enhancedPixels[index + 2] = normalized;
+      enhancedPixels[index + 3] = 255;
+    }
+    ctx.putImageData(enhanced, 0, 0);
+
+    const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png", 0.96));
     return new File([blob], file.name.replace(/\.[^.]+$/, ".png"), { type: "image/png" });
   };
 
