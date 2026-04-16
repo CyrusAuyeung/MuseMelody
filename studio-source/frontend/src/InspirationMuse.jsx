@@ -436,6 +436,38 @@ function StaffNotation({ notes, staves = null, highlightIndex = -1, label = "", 
   );
 }
 
+function ParsedPitchSummary({ staves }) {
+  if (!Array.isArray(staves) || !staves.length) return null;
+
+  const normalizePitchName = (note) => {
+    if (note?.pitch_name) return String(note.pitch_name);
+    const midi = Number(note?.pitch_midi ?? note?.midi);
+    return Number.isFinite(midi) ? midiToName(midi) : "?";
+  };
+
+  return (
+    <div style={{ marginTop: 12, padding: "12px 14px", borderRadius: 12, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)" }}>
+      <div style={{ fontSize: 12, color: "#d8d2ea", marginBottom: 8 }}>
+        当前识别到的音高数据。若这里的音名就与原图不一致，问题在 AI 识别；若这里正确但五线谱位置不对，问题才在前端绘制。
+      </div>
+      <div style={{ display: "grid", gap: 8 }}>
+        {staves.map((staffBlock, index) => {
+          const notes = (staffBlock?.notes || []).map((note) => normalizePitchName(note));
+          const staffLabel = staffBlock?.staff === "bass" ? "低音谱表 Bass" : "高音谱表 Treble";
+          return (
+            <div key={`${staffBlock?.staff || "staff"}-${index}`}>
+              <div style={{ fontSize: 12, color: "#bfb4d8", marginBottom: 4 }}>{staffLabel}</div>
+              <div style={{ fontSize: 13, color: "#f5efff", fontFamily: "monospace", lineHeight: 1.7, wordBreak: "break-word" }}>
+                {notes.length ? notes.join("  |  ") : "无可用音符"}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 // ══════════════════════════════════════════════
 //  WAVEFORM VISUALIZATION
 // ══════════════════════════════════════════════
@@ -1232,6 +1264,7 @@ export default function InspirationMuse({ embedded = false }) {
             <div style={{ marginTop: 16 }}>
               <StaffNotation notes={melody} staves={parsedStaves} label="原始旋律 Original Melody"
                 highlightIndex={playingWhat === "original" ? highlightIdx : -1} color="#7eb8ff" />
+              <ParsedPitchSummary staves={parsedStaves} />
             </div>
           )}
 
