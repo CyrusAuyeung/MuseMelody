@@ -46,6 +46,7 @@ The current online version already provides a complete product flow:
 - In-browser audio preview
 - MIDI export
 - Embedded studio experience directly inside the homepage
+- Branded homepage, in-product logo, and browser-tab favicon
 
 ## User Flow
 
@@ -171,6 +172,7 @@ The current online version uses:
 - Cloudflare Pages Functions APIs
 - Embedded studio build output injected into the homepage
 - OpenAI-compatible score parsing integration
+- Unified in-product logo branding and favicon configuration
 
 The original [studio-source/backend](studio-source/backend) remains in the repository as a Python/FastAPI reference implementation.
 
@@ -181,6 +183,12 @@ The current score parsing path also supports:
 - environment-based `OPENAI_MODEL`
 - grand-staff hints for piano images
 - structured `treble / bass` output when available
+
+The current user-facing UI has also been cleaned up to:
+
+- remove debug / diagnostics copy from the public experience
+- use the same product logo across the homepage and embedded studio
+- use `logo.png` as the browser tab icon
 
 ## Roadmap
 

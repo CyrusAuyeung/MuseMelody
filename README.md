@@ -46,6 +46,7 @@ MuseMelody 当前主要服务这类场景：
 - 网页内即时试听
 - MIDI 导出
 - 首页内嵌成熟工作台体验
+- 品牌化首页、站内 logo 与浏览器标签页图标
 
 ## 使用流程
 
@@ -173,6 +174,7 @@ npm run build:studio
 - Cloudflare Pages Functions API
 - 嵌入首页的成熟服务构建产物
 - 兼容 OpenAI API 的图片识别接入方式
+- 统一的站内 logo 品牌展示与 favicon 配置
 
 仓库中的 [studio-source/backend](studio-source/backend) 保留了原始 Python/FastAPI 参考实现。
 
@@ -184,6 +186,12 @@ npm run build:studio
 - 通过 `score_type` 提示引导钢琴大谱表识别
 - 返回 `treble / bass` 双谱表结构（当识别成功时）
 - 在识别失败时自动回退到占位识别流程
+
+当前用户界面已经进一步整理为：
+
+- 不向公开用户暴露调试/排障反馈文本
+- 首页与内嵌工作台统一使用站内 logo
+- 浏览器标签页使用 `logo.png` 作为图标
 
 ## 路线图
 
