@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MuseMelody | AI 旋律续写与乐谱生成工作台</title>
+    <title>MuseMelody Studio | AI 音乐创作工作台</title>
     <meta
       name="description"
-      content="MuseMelody 是一个面向公开用户的 AI 音乐生成工作台，可从乐谱、MIDI、MusicXML 或文字描述出发，生成新的旋律、和声与试听片段。"
+      content="MuseMelody Studio 是面向音乐创作者的 AI 旋律续写工作台，支持乐谱图片输入、双谱表预览、试听与 MIDI 导出。"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Sora:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="icon" type="image/png" href="/studio/logo.png" />
@@ -21,200 +21,112 @@
   <body>
     <div class="site-frame">
       <header class="site-header">
-        <a class="brand" href="#top" aria-label="MuseMelody 首页">
-          <img class="brand-logo" src="./studio/logo.png" alt="MuseMelody logo" />
+        <a class="brand" href="#top" aria-label="MuseMelody Studio 首页">
+          <span class="brand-logo-shell">
+            <img class="brand-logo" src="/studio/logo.png" alt="MuseMelody logo" />
+          </span>
           <span class="brand-copy">
             <strong>MuseMelody</strong>
-            <small>AI 旋律工作台</small>
+            <small>AI Music Studio</small>
           </span>
         </a>
 
         <nav class="site-nav" aria-label="主导航">
-          <a href="#features">功能</a>
-          <a href="#studio-service">开始使用</a>
-          <a href="#results">结果预览</a>
-          <a href="#faq">帮助</a>
+          <a href="#studio-service">工作台</a>
+          <a href="#workflow">流程</a>
+          <a href="#outputs">输出</a>
+          <a href="#faq">FAQ</a>
         </nav>
 
         <div class="header-actions">
-          <span class="status-chip">Now Available</span>
-          <a class="ghost-button ghost-button--link" href="#studio-service">进入服务</a>
+          <span class="status-chip"><span></span>Live beta</span>
+          <a class="secondary-button" href="#studio-service">打开工作台</a>
         </div>
       </header>
 
       <main class="page-shell" id="top">
-        <section class="hero">
-          <div class="hero-copy">
-            <p class="eyebrow">AI 旋律生成工具</p>
-            <h1>上传一段旋律，让它继续往下写。</h1>
-            <p class="hero-support">
-              MuseMelody 帮你从已有乐谱、MIDI、MusicXML 或文字描述出发，快速生成新的和声、旋律片段和试听结果。无论你是在继续写一段副歌、扩展主题，还是寻找新的发展方向，都可以直接在这里开始。
-            </p>
-
-            <div class="hero-actions">
-              <a class="primary-button primary-button--link" href="#studio-service">开始使用</a>
-              <a class="ghost-button ghost-button--link" href="#results">先看结果展示</a>
-            </div>
-
-            <div class="hero-metrics">
-              <article class="metric-card">
-                <span>输入格式</span>
-                <strong>Score / MIDI / MusicXML / Text</strong>
-              </article>
-              <article class="metric-card">
-                <span>输出能力</span>
-                <strong>Harmony / Melody / Preview Audio</strong>
-              </article>
-              <article class="metric-card">
-                <span>使用方式</span>
-                <strong>上传、生成、试听、导出</strong>
-              </article>
-            </div>
-          </div>
-
-          <div class="hero-preview card-dark">
-            <div class="preview-topbar">
-              <span class="preview-pill">Session Preview</span>
-              <span class="preview-pill preview-pill--accent">neo-soul</span>
-            </div>
-
-            <div class="preview-sheet">
-              <div class="staff-lines"></div>
-              <div class="preview-notes">
-                <span class="preview-note preview-note--1"></span>
-                <span class="preview-note preview-note--2"></span>
-                <span class="preview-note preview-note--3"></span>
-                <span class="preview-note preview-note--4"></span>
-                <span class="preview-note preview-note--5"></span>
-                <span class="preview-note preview-note--6"></span>
-              </div>
-            </div>
-
-            <div class="preview-grid">
-              <article class="preview-card">
-                <span class="preview-label">和声建议</span>
-                <div class="mini-tags">
-                  <span>Cmaj9</span>
-                  <span>Dm9</span>
-                  <span>G13</span>
-                  <span>Em7</span>
-                </div>
-              </article>
-
-              <article class="preview-card">
-                <span class="preview-label">试听强度</span>
-                <div class="preview-wave">
-                  <span class="preview-wave-bar preview-wave-bar--1"></span>
-                  <span class="preview-wave-bar preview-wave-bar--2"></span>
-                  <span class="preview-wave-bar preview-wave-bar--3"></span>
-                  <span class="preview-wave-bar preview-wave-bar--4"></span>
-                  <span class="preview-wave-bar preview-wave-bar--5"></span>
-                  <span class="preview-wave-bar preview-wave-bar--6"></span>
-                  <span class="preview-wave-bar preview-wave-bar--7"></span>
-                </div>
-              </article>
-
-              <article class="preview-card preview-card--wide">
-                <span class="preview-label">生成结果</span>
-                <p>你会直接得到新的和声建议、旋律片段和试听反馈，方便判断这段思路是否值得继续发展。</p>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        <section class="trust-strip">
-          <article class="trust-card">
-            <span>适合输入</span>
-            <strong>创作起稿、编曲辅助、灵感续写</strong>
-          </article>
-          <article class="trust-card">
-            <span>适合人群</span>
-            <strong>作曲人、编曲人、制作人、爱好者</strong>
-          </article>
-          <article class="trust-card">
-            <span>结果形式</span>
-            <strong>生成、试听、预览一体化</strong>
-          </article>
-          <article class="trust-card">
-            <span>可继续操作</span>
-            <strong>比较、调整、导出下一版结果</strong>
-          </article>
-        </section>
-
-        <section id="features" class="value-section">
-          <div class="section-heading">
+        <section id="studio-service" class="studio-section studio-section--primary">
+          <div class="section-heading section-heading--studio">
             <div>
-              <p class="section-tag">功能</p>
-              <h2>把旋律续写中最常用的动作整合到一个界面里。</h2>
+              <p class="section-tag">Workspace</p>
+              <h2>MuseMelody Studio</h2>
             </div>
             <p>
-              你不需要在多个工具之间来回切换。MuseMelody 把输入、参数调整、结果预览和试听放在同一个流程里，让你更快从灵感走到可判断的结果。
-            </p>
-          </div>
-
-          <div class="value-grid">
-            <article class="value-card">
-              <p class="value-index">01</p>
-              <h3>从已有素材继续往下写</h3>
-              <p>支持乐谱、MIDI、MusicXML、图片或文字描述作为输入，不需要从零开始重新构思整段旋律。</p>
-            </article>
-
-            <article class="value-card">
-              <p class="value-index">02</p>
-              <h3>像使用工具一样调节结果</h3>
-              <p>你可以直接控制长度、风格、速度和生成方向，而不是先理解一堆抽象术语。</p>
-            </article>
-
-            <article class="value-card">
-              <p class="value-index">03</p>
-              <h3>先试听，再决定要不要继续</h3>
-              <p>结果会直接呈现为和声、旋律片段和试听反馈，方便你快速比较和做选择。</p>
-            </article>
-          </div>
-        </section>
-
-        <section id="studio-service" class="demo-shell demo-shell--embedded">
-          <div class="section-heading section-heading--tight">
-            <div>
-              <p class="section-tag">服务</p>
-              <h2>开始你的旋律续写</h2>
-            </div>
-            <p>
-              上传你的输入，设置风格和参数，然后直接获得新的旋律与和声结果。整个过程都会在当前页面完成。
+              核心操作都在这里完成：输入旋律、设置生成参数、试听结果、导出 MIDI。
             </p>
           </div>
 
           <div id="studio-root" class="embedded-studio-host"></div>
         </section>
 
-        <section id="results" class="roadmap-shell">
-          <div class="section-heading section-heading--tight">
+        <section class="studio-summary" aria-label="MuseMelody product summary">
+          <article>
+            <span>Input</span>
+            <strong>乐谱图片 / 键盘输入</strong>
+          </article>
+          <article>
+            <span>Control</span>
+            <strong>风格、速度、音色、长度</strong>
+          </article>
+          <article>
+            <span>Output</span>
+            <strong>试听预览 / MIDI 导出</strong>
+          </article>
+        </section>
+
+        <section id="workflow" class="workflow-section">
+          <div class="section-heading">
             <div>
-              <p class="section-tag">结果</p>
-              <h2>生成之后，你能立刻看到什么。</h2>
+              <p class="section-tag">Workflow</p>
+              <h2>围绕创作过程组织，而不是围绕模型说明组织。</h2>
             </div>
             <p>
-              结果不会只是一串音符。你会直接看到和声建议、旋律片段和试听反馈，方便你快速判断这版结果是否符合预期。
+              对创作者来说，最重要的是快速判断一版结果是否可用。页面因此保留清晰的输入、参数、试听和导出路径。
             </p>
           </div>
 
-          <div class="roadmap-grid">
-            <article class="roadmap-card roadmap-card--current">
-              <p class="section-tag">和声</p>
-              <h3>和声建议</h3>
-              <p>你可以快速判断这一版结果在整体色彩和推进方向上是否符合预期。</p>
+          <div class="workflow-grid">
+            <article class="workflow-card">
+              <span>01</span>
+              <h3>导入素材</h3>
+              <p>从乐谱图片或键盘输入开始，先得到可被生成流程使用的旋律数据。</p>
             </article>
-
-            <article class="roadmap-card">
-              <p class="section-tag">旋律</p>
-              <h3>旋律片段</h3>
-              <p>你可以查看每个小节的旋律走向、音高和节奏分布，再决定下一步怎么改。</p>
+            <article class="workflow-card">
+              <span>02</span>
+              <h3>设置方向</h3>
+              <p>选择风格、音色、速度与生成长度，让结果贴近当前创作目标。</p>
             </article>
-
-            <article class="roadmap-card">
-              <p class="section-tag">试听</p>
+            <article class="workflow-card">
+              <span>03</span>
               <h3>试听与导出</h3>
-              <p>你可以直接试听结果，并在满意时继续导出或生成下一版。</p>
+              <p>试听原旋律、生成旋律或合并版本，并在需要时导出 MIDI 继续编曲。</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="outputs" class="outputs-section">
+          <div class="section-heading section-heading--tight">
+            <div>
+              <p class="section-tag">Outputs</p>
+              <h2>让结果可以被继续使用。</h2>
+            </div>
+            <p>
+              MuseMelody 的结果不是孤立文本，而是可以看、可以听、可以导出的创作素材。
+            </p>
+          </div>
+
+          <div class="outputs-grid">
+            <article>
+              <strong>双谱表预览</strong>
+              <p>乐谱识别结果以高音谱表与低音谱表呈现，便于快速检查旋律结构。</p>
+            </article>
+            <article>
+              <strong>实时试听</strong>
+              <p>在浏览器内直接播放原旋律、生成结果与合并版本。</p>
+            </article>
+            <article>
+              <strong>MIDI 导出</strong>
+              <p>将当前结果导出到 DAW 或其他音乐制作工具继续加工。</p>
             </article>
           </div>
         </section>
@@ -223,45 +135,32 @@
           <div class="section-heading section-heading--tight">
             <div>
               <p class="section-tag">FAQ</p>
-              <h2>第一次使用时，你最可能会关心的问题。</h2>
+              <h2>常见问题</h2>
             </div>
-            <p>
-              如果你是第一次使用 MuseMelody，下面这些问题可以帮助你更快开始。
-            </p>
           </div>
 
           <div class="faq-grid">
-            <article class="faq-card">
-              <h3>需要会看乐谱才能用吗？</h3>
-              <p>不一定。你可以上传结构化乐谱，也可以直接用文字描述你希望的旋律方向和风格。</p>
+            <article>
+              <h3>它适合完整编曲吗？</h3>
+              <p>当前更适合旋律续写、灵感草稿和快速试听。完整编曲仍建议导出 MIDI 后进入专业 DAW。</p>
             </article>
-
-            <article class="faq-card">
-              <h3>生成结果可以试听吗？</h3>
-              <p>可以。生成后页面会直接提供试听预览，方便你快速判断是否值得继续推进。</p>
+            <article>
+              <h3>识别结果一定准确吗？</h3>
+              <p>图片识别会受清晰度、谱面裁切和模型能力影响。页面保留可视化预览，方便你判断输入质量。</p>
             </article>
-
-            <article class="faq-card">
-              <h3>我可以多次改参数重新生成吗？</h3>
-              <p>可以。你可以切换风格、长度和创造性设置，再快速比较不同结果。</p>
+            <article>
+              <h3>可以多次生成吗？</h3>
+              <p>可以。你可以调整风格、速度、音色和小节数，多次生成并比较不同版本。</p>
             </article>
           </div>
-        </section>
-
-        <section class="cta-band">
-          <div>
-            <p class="section-tag">开始使用</p>
-            <h2>把一段已有旋律交给 MuseMelody，看看它会给你怎样的下一句。</h2>
-          </div>
-          <a class="primary-button primary-button--link" href="#studio-service">开始使用</a>
         </section>
       </main>
 
       <footer class="site-footer">
-        <span>MuseMelody</span>
-        <span>AI 旋律工作台</span>
+        <span>MuseMelody Studio</span>
+        <span>AI assisted melody continuation</span>
       </footer>
     </div>
-    <script type="module" src="/studio/assets/embed-CQC9-r73.js"></script>
+    <script type="module" src="/studio/assets/embed-DfXF9sCi.js"></script>
   </body>
 </html>

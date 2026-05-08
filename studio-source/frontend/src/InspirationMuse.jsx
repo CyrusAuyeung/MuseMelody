@@ -359,7 +359,7 @@ function StaffNotation({ notes, staves = null, highlightIndex = -1, label = "", 
 
   return (
     <div style={{ marginBottom: 16 }}>
-      {label && <div style={{ fontSize: 13, color: "#aaa", marginBottom: 4, fontFamily: "'Cormorant Garamond', serif" }}>{label}</div>}
+      {label && <div style={{ fontSize: 13, color: "#9eacbc", marginBottom: 6, fontFamily: "'IBM Plex Sans', system-ui, sans-serif", fontWeight: 700 }}>{label}</div>}
       <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", background: "rgba(255,255,255,0.03)", borderRadius: 8, border: "1px solid rgba(255,255,255,0.06)" }}>
         {normalizedStaves.map((staffBlock, staffIndex) => {
           const staffTop = 30 + staffIndex * staffSpacing;
@@ -890,122 +890,119 @@ export default function InspirationMuse({ embedded = false }) {
   const css = {
     app: {
       minHeight: embedded ? "auto" : "100vh",
-      background: embedded ? "transparent" : "linear-gradient(170deg, #0a0612 0%, #110b20 40%, #0d1025 70%, #080510 100%)",
-      color: embedded ? "#f2ebff" : "#e0d8f0",
-      fontFamily: "'Cormorant Garamond', Georgia, serif",
-      padding: embedded ? "0" : "24px 16px",
+      background: embedded ? "transparent" : "linear-gradient(180deg, #0b1118 0%, #111927 100%)",
+      color: "#eef4fb",
+      fontFamily: "'IBM Plex Sans', 'Microsoft YaHei', system-ui, sans-serif",
+      padding: embedded ? 0 : "24px 16px",
       position: "relative",
       overflow: "hidden",
     },
     header: {
-      textAlign: "center",
-      marginBottom: 32,
+      marginBottom: 18,
       position: "relative",
       zIndex: 1,
     },
     headerBrand: {
-      display: "inline-flex",
+      display: "flex",
       alignItems: "center",
-      justifyContent: "center",
-      gap: 18,
-      marginBottom: 16,
-      padding: "12px 18px 12px 12px",
-      borderRadius: 28,
-      background: "rgba(255,255,255,0.08)",
-      border: "1px solid rgba(255,255,255,0.12)",
-      boxShadow: "0 18px 40px rgba(0,0,0,0.18)",
+      justifyContent: "space-between",
+      gap: 16,
+      padding: "14px 16px",
+      borderRadius: 18,
+      background: "rgba(14,22,34,0.92)",
+      border: "1px solid rgba(224,233,245,0.12)",
+      boxShadow: "0 18px 42px rgba(0,0,0,0.24)",
     },
     headerLogo: {
-      width: embedded ? 124 : 148,
-      height: embedded ? 124 : 148,
+      width: embedded ? 62 : 72,
+      height: embedded ? 62 : 72,
       objectFit: "contain",
-      borderRadius: 28,
-      boxShadow: "0 24px 48px rgba(0,0,0,0.28)",
-      background: "linear-gradient(180deg, rgba(250,252,255,0.98), rgba(232,240,247,0.96))",
-      border: "1px solid rgba(126,184,255,0.28)",
-      padding: 14,
+      borderRadius: 16,
+      background: "#f7fbff",
+      border: "1px solid rgba(255,255,255,0.72)",
+      padding: 9,
+      boxShadow: "0 14px 28px rgba(0,0,0,0.26)",
     },
     headerBrandText: {
       display: "flex",
       flexDirection: "column",
       alignItems: "flex-start",
       textAlign: "left",
-      gap: 2,
+      gap: 4,
+      flex: 1,
     },
     title: {
-      fontSize: 42,
-      fontWeight: 300,
-      letterSpacing: 8,
-      background: "linear-gradient(135deg, #c9a0ff 0%, #7eb8ff 50%, #ffb0d0 100%)",
-      WebkitBackgroundClip: "text",
-      WebkitTextFillColor: "transparent",
-      marginBottom: 4,
+      fontSize: embedded ? 26 : 32,
+      fontWeight: 700,
+      letterSpacing: 0,
+      color: "#f3f7fc",
+      margin: 0,
+      fontFamily: "'Sora', 'IBM Plex Sans', sans-serif",
     },
     subtitle: {
-      fontSize: 15,
-      color: "rgba(180,160,220,0.6)",
-      letterSpacing: 4,
-      textTransform: "uppercase",
+      fontSize: 13,
+      color: "#9eacbc",
+      letterSpacing: 0,
     },
     section: {
-      background: embedded ? "rgba(255,255,255,0.07)" : "rgba(255,255,255,0.03)",
-      borderRadius: embedded ? 24 : 16,
-      padding: embedded ? 28 : 24,
-      marginBottom: 20,
-      border: embedded ? "1px solid rgba(255,255,255,0.12)" : "1px solid rgba(255,255,255,0.06)",
-      backdropFilter: "blur(20px)",
-      boxShadow: embedded ? "0 18px 40px rgba(0,0,0,0.18)" : "none",
+      background: "rgba(16,24,36,0.9)",
+      borderRadius: 18,
+      padding: embedded ? 24 : 22,
+      marginBottom: 16,
+      border: "1px solid rgba(224,233,245,0.12)",
+      boxShadow: "0 16px 34px rgba(0,0,0,0.2)",
     },
     sectionTitle: {
-      fontSize: embedded ? 21 : 18,
-      fontWeight: 600,
+      fontSize: 18,
+      fontWeight: 700,
       marginBottom: 16,
-      color: embedded ? "#f4ecff" : "#c9a0ff",
-      letterSpacing: 2,
+      color: "#f2f6fb",
+      letterSpacing: 0,
+      fontFamily: "'Sora', 'IBM Plex Sans', sans-serif",
     },
-    btn: (active = false, accent = "#c9a0ff") => ({
-      padding: "8px 18px",
-      borderRadius: 8,
-      border: active ? `1px solid ${accent}` : "1px solid rgba(255,255,255,0.1)",
-      background: active ? `${accent}22` : "rgba(255,255,255,0.04)",
-      color: active ? accent : embedded ? "#d5cde7" : "#b0a8c8",
-      cursor: "pointer",
-      fontSize: 14,
-      fontFamily: "'Cormorant Garamond', serif",
-      transition: "all 0.2s",
-      letterSpacing: 1,
-    }),
-    bigBtn: (color = "#c9a0ff") => ({
-      padding: "12px 32px",
-      borderRadius: 12,
-      border: "none",
-      background: `linear-gradient(135deg, ${color}, ${color}88)`,
-      color: "#fff",
-      cursor: "pointer",
-      fontSize: 16,
-      fontFamily: "'Cormorant Garamond', serif",
-      fontWeight: 600,
-      letterSpacing: 2,
-      boxShadow: `0 4px 20px ${color}44`,
-      transition: "all 0.3s",
-    }),
-    pill: (active) => ({
-      padding: "6px 14px",
-      borderRadius: 20,
-      border: active ? "1px solid #c9a0ff" : "1px solid rgba(255,255,255,0.08)",
-      background: active ? "rgba(201,160,255,0.15)" : "transparent",
-      color: active ? "#c9a0ff" : "#8880a0",
+    btn: (active = false, accent = "#16c2a3") => ({
+      padding: "9px 14px",
+      borderRadius: 10,
+      border: active ? `1px solid ${accent}` : "1px solid rgba(224,233,245,0.13)",
+      background: active ? `${accent}24` : "rgba(255,255,255,0.045)",
+      color: active ? "#dbfff7" : "#b9c6d6",
       cursor: "pointer",
       fontSize: 13,
-      transition: "all 0.2s",
+      fontFamily: "inherit",
+      fontWeight: 700,
+      transition: "all 0.18s",
+    }),
+    bigBtn: (color = "#16c2a3") => ({
+      padding: "12px 24px",
+      borderRadius: 12,
+      border: "none",
+      background: `linear-gradient(135deg, ${color}, ${color}cc)`,
+      color: color === "#16c2a3" ? "#051317" : "#fff",
+      cursor: "pointer",
+      fontSize: 14,
+      fontFamily: "inherit",
+      fontWeight: 800,
+      boxShadow: `0 12px 26px ${color}2f`,
+      transition: "all 0.18s",
+    }),
+    pill: (active) => ({
+      padding: "8px 12px",
+      borderRadius: 999,
+      border: active ? "1px solid rgba(22,194,163,0.72)" : "1px solid rgba(224,233,245,0.12)",
+      background: active ? "rgba(22,194,163,0.16)" : "rgba(255,255,255,0.035)",
+      color: active ? "#d7fff7" : "#9eacbc",
+      cursor: "pointer",
+      fontSize: 13,
+      fontWeight: 700,
+      transition: "all 0.18s",
     }),
     input: {
       width: "100%",
       padding: "10px 14px",
-      borderRadius: 8,
-      border: "1px solid rgba(255,255,255,0.1)",
-      background: "rgba(255,255,255,0.06)",
-      color: "#f4ecff",
+      borderRadius: 10,
+      border: "1px solid rgba(224,233,245,0.12)",
+      background: "rgba(255,255,255,0.045)",
+      color: "#eef4fb",
       fontSize: 14,
       fontFamily: "monospace",
       outline: "none",
@@ -1013,29 +1010,30 @@ export default function InspirationMuse({ embedded = false }) {
     },
     slider: {
       width: "100%",
-      accentColor: "#c9a0ff",
+      accentColor: "#16c2a3",
       cursor: "pointer",
     },
-    badge: (color = "#c9a0ff") => ({
+    badge: (color = "#16c2a3") => ({
       display: "inline-block",
-      padding: "4px 12px",
-      borderRadius: 20,
-      background: `${color}22`,
+      padding: "6px 10px",
+      borderRadius: 999,
+      background: `${color}20`,
       color,
-      fontSize: 13,
+      fontSize: 12,
+      fontWeight: 800,
       marginRight: 8,
       marginBottom: 6,
       border: `1px solid ${color}33`,
     }),
     analysisBox: {
-      background: "rgba(201,160,255,0.05)",
-      borderRadius: 12,
+      background: "rgba(255,255,255,0.045)",
+      borderRadius: 14,
       padding: 16,
-      border: "1px solid rgba(201,160,255,0.1)",
+      border: "1px solid rgba(224,233,245,0.11)",
       fontSize: 14,
       lineHeight: 1.8,
       whiteSpace: "pre-wrap",
-      color: "#c8c0d8",
+      color: "#b9c6d6",
       maxHeight: 300,
       overflowY: "auto",
     },
@@ -1045,25 +1043,24 @@ export default function InspirationMuse({ embedded = false }) {
       gap: 14,
       flexWrap: "wrap",
       padding: "14px 16px",
-      borderRadius: 12,
-      border: "1px solid rgba(255,255,255,0.12)",
-      background: "rgba(255,255,255,0.05)",
+      borderRadius: 14,
+      border: "1px solid rgba(224,233,245,0.13)",
+      background: "rgba(255,255,255,0.045)",
     },
     fileButton: {
       padding: "10px 16px",
       borderRadius: 10,
-      border: "1px solid rgba(201,160,255,0.32)",
-      background: "linear-gradient(135deg, rgba(201,160,255,0.24), rgba(126,184,255,0.18))",
-      color: "#f5efff",
+      border: "1px solid rgba(22,194,163,0.42)",
+      background: "linear-gradient(135deg, rgba(22,194,163,0.22), rgba(76,141,255,0.16))",
+      color: "#effffb",
       fontFamily: "inherit",
       fontSize: 14,
-      fontWeight: 600,
-      letterSpacing: 0.5,
+      fontWeight: 800,
       cursor: "pointer",
     },
     fileName: {
       fontSize: 13,
-      color: "#ddd5ee",
+      color: "#b9c6d6",
       opacity: 0.92,
     },
     statusRow: {
@@ -1075,28 +1072,29 @@ export default function InspirationMuse({ embedded = false }) {
     statusCard: {
       padding: "14px 16px",
       borderRadius: 14,
-      border: "1px solid rgba(255,255,255,0.12)",
-      background: "rgba(255,255,255,0.05)",
+      border: "1px solid rgba(224,233,245,0.12)",
+      background: "rgba(255,255,255,0.045)",
     },
     statusTitle: {
       fontSize: 12,
-      color: "#bdb2d4",
+      color: "#718094",
       marginBottom: 6,
-      letterSpacing: 1.2,
+      letterSpacing: 0.8,
       textTransform: "uppercase",
+      fontWeight: 800,
     },
     statusValue: {
       fontSize: 14,
-      color: "#f3ecff",
+      color: "#eef4fb",
       lineHeight: 1.5,
     },
     emptyPanel: {
       marginTop: 16,
       padding: 18,
       borderRadius: 14,
-      border: "1px dashed rgba(255,255,255,0.14)",
-      background: "rgba(255,255,255,0.03)",
-      color: "#cfc5df",
+      border: "1px dashed rgba(224,233,245,0.16)",
+      background: "rgba(255,255,255,0.035)",
+      color: "#b9c6d6",
       lineHeight: 1.7,
     },
     presetRow: {
@@ -1108,20 +1106,20 @@ export default function InspirationMuse({ embedded = false }) {
     presetCard: {
       padding: "14px 16px",
       borderRadius: 14,
-      border: "1px solid rgba(255,255,255,0.1)",
+      border: "1px solid rgba(224,233,245,0.12)",
       background: "rgba(255,255,255,0.04)",
       cursor: "pointer",
       textAlign: "left",
     },
     presetName: {
       display: "block",
-      color: "#f3ecff",
+      color: "#eef4fb",
       fontSize: 15,
       marginBottom: 6,
-      fontWeight: 600,
+      fontWeight: 800,
     },
     presetDesc: {
-      color: "#bdb2d4",
+      color: "#9eacbc",
       fontSize: 13,
       lineHeight: 1.6,
     },
@@ -1144,7 +1142,7 @@ export default function InspirationMuse({ embedded = false }) {
       flexWrap: "wrap",
     },
     actionMeta: {
-      color: "#bdb2d4",
+      color: "#9eacbc",
       fontSize: 13,
       lineHeight: 1.6,
     },
@@ -1152,69 +1150,35 @@ export default function InspirationMuse({ embedded = false }) {
 
   return (
     <div style={css.app}>
-      {/* Ambient particles */}
-      <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, pointerEvents: "none", zIndex: 0 }}>
-        {[...Array(20)].map((_, i) => (
-          <div key={i} style={{
-            position: "absolute",
-            width: 2 + Math.random() * 3,
-            height: 2 + Math.random() * 3,
-            borderRadius: "50%",
-            background: `rgba(${150 + Math.random()*100}, ${100 + Math.random()*100}, 255, ${0.1 + Math.random()*0.2})`,
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animation: `float ${5 + Math.random()*10}s ease-in-out infinite`,
-            animationDelay: `${Math.random() * 5}s`,
-          }} />
-        ))}
-      </div>
-
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
-        @keyframes float {
-          0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
-          50% { transform: translateY(-30px) translateX(10px); opacity: 0.6; }
-        }
         @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(201,160,255,0.2); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: rgba(158,172,188,0.32); border-radius: 3px; }
         * { box-sizing: border-box; }
       `}</style>
 
-      <div style={{ position: "relative", zIndex: 1, maxWidth: embedded ? 1120 : 800, margin: "0 auto" }}>
+      <div style={{ position: "relative", zIndex: 1, maxWidth: embedded ? "100%" : 920, margin: "0 auto" }}>
         {/* Header */}
         {!embedded && (
           <header style={css.header}>
             <div style={css.headerBrand}>
               <img src="/studio/logo.png" alt="MuseMelody logo" style={css.headerLogo} />
               <div style={css.headerBrandText}>
-                <h1 style={css.title}>MuseMelody</h1>
-                <p style={css.subtitle}>AI Music Improvisation Generator</p>
+                <h1 style={css.title}>MuseMelody Studio</h1>
+                <p style={css.subtitle}>AI melody continuation workspace</p>
               </div>
             </div>
-            <p style={{ fontSize: 12, color: "rgba(160,140,200,0.4)", marginTop: 4, letterSpacing: 2 }}>
-              旋律生成 · 和声建议 · 即时试听
+            <p style={{ fontSize: 12, color: "#718094", marginTop: 8 }}>
+              乐谱输入 · 旋律续写 · 即时试听 · MIDI 导出
             </p>
-          </header>
-        )}
-
-        {embedded && (
-          <header style={css.header}>
-            <div style={css.headerBrand}>
-              <img src="/studio/logo.png" alt="MuseMelody logo" style={css.headerLogo} />
-              <div style={css.headerBrandText}>
-                <h1 style={{ ...css.title, fontSize: 38, marginBottom: 0 }}>MuseMelody</h1>
-                <p style={css.subtitle}>AI Music Improvisation Generator</p>
-              </div>
-            </div>
           </header>
         )}
 
         {/* ═══ INPUT SECTION ═══ */}
         <section style={css.section}>
-          <h2 style={css.sectionTitle}>⟐ 输入旋律</h2>
+          <h2 style={css.sectionTitle}>输入旋律</h2>
 
           {toast && <div style={css.toast}>{toast}</div>}
 
@@ -1260,7 +1224,7 @@ export default function InspirationMuse({ embedded = false }) {
           {inputMode === "piano" && (
             <div>
               <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 10, flexWrap: "wrap" }}>
-                <span style={{ fontSize: 12, color: "#a098b8" }}>时值：</span>
+                <span style={{ fontSize: 12, color: "#9eacbc" }}>时值：</span>
                 {DURATION_OPTIONS.map(opt => (
                   <button key={opt.value} style={css.pill(selectedDuration === opt.value)} onClick={() => setSelectedDuration(opt.value)}>
                     {opt.label}
@@ -1277,7 +1241,7 @@ export default function InspirationMuse({ embedded = false }) {
                       left: i * (100 / whiteKeys.length) + "%",
                       width: (100 / whiteKeys.length - 0.2) + "%",
                       height: "100%",
-                      background: customNotes.some(n => n.midi === k.midi) ? "rgba(201,160,255,0.3)" : "rgba(255,255,255,0.08)",
+                      background: customNotes.some(n => n.midi === k.midi) ? "rgba(22,194,163,0.28)" : "rgba(255,255,255,0.08)",
                       border: "1px solid rgba(255,255,255,0.1)",
                       borderRadius: "0 0 6px 6px",
                       cursor: "pointer",
@@ -1303,7 +1267,7 @@ export default function InspirationMuse({ embedded = false }) {
                         left: (whiteIdx * (100 / whiteKeys.length) - (100 / whiteKeys.length) * 0.3) + "%",
                         width: (100 / whiteKeys.length * 0.6) + "%",
                         height: "60%",
-                        background: customNotes.some(n => n.midi === k.midi) ? "rgba(201,160,255,0.5)" : "rgba(30,20,50,0.9)",
+                        background: customNotes.some(n => n.midi === k.midi) ? "rgba(22,194,163,0.62)" : "rgba(9,17,29,0.94)",
                         border: "1px solid rgba(255,255,255,0.1)",
                         borderRadius: "0 0 4px 4px",
                         cursor: "pointer",
@@ -1314,7 +1278,7 @@ export default function InspirationMuse({ embedded = false }) {
                 })}
               </div>
               <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                <span style={{ fontSize: 12, color: "#8880a0" }}>
+                <span style={{ fontSize: 12, color: "#9eacbc" }}>
                   {customNotes.length ? customNotes.map(n => `${midiToName(n.midi)}:${durationToLabel(n.duration)}`).join("  ") : "点击琴键录入音高与标准时值（当前覆盖 C3-B6）"}
                 </span>
                 <button style={css.btn(false)} onClick={loadCustomNotes}>载入</button>
@@ -1327,7 +1291,7 @@ export default function InspirationMuse({ embedded = false }) {
           {/* Upload image input */}
           {inputMode === "upload" && (
             <div>
-              <p style={{ fontSize: 12, color: "#8880a0", marginBottom: 8 }}>
+              <p style={{ fontSize: 12, color: "#9eacbc", marginBottom: 8 }}>
                 上传五线谱或六线谱图片，系统会先将其转换为可用于续写的旋律数据。
               </p>
               <div style={css.fileShell}>
@@ -1343,7 +1307,7 @@ export default function InspirationMuse({ embedded = false }) {
                   style={{ display: "none" }}
                 />
               </div>
-              {uploadHint && <p style={{ fontSize: 12, color: "#a098b8", marginTop: 8 }}>{uploadHint}</p>}
+              {uploadHint && <p style={{ fontSize: 12, color: "#9eacbc", marginTop: 8 }}>{uploadHint}</p>}
             </div>
           )}
 
@@ -1351,7 +1315,7 @@ export default function InspirationMuse({ embedded = false }) {
           {melody.length > 0 && (
             <div style={{ marginTop: 16 }}>
               <StaffNotation notes={melody} staves={parsedStaves} label="原始旋律 Original Melody"
-                highlightIndex={playingWhat === "original" ? highlightIdx : -1} color="#7eb8ff" />
+                highlightIndex={playingWhat === "original" ? highlightIdx : -1} color="#4c8dff" />
             </div>
           )}
 
@@ -1370,11 +1334,11 @@ export default function InspirationMuse({ embedded = false }) {
 
         {/* ═══ PARAMETERS ═══ */}
         <section style={css.section}>
-          <h2 style={css.sectionTitle}>⟐ 生成参数</h2>
+          <h2 style={css.sectionTitle}>生成参数</h2>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
             {/* Style */}
             <div>
-              <label style={{ fontSize: 13, color: "#a098b8", display: "block", marginBottom: 6 }}>生成风格</label>
+              <label style={{ fontSize: 13, color: "#9eacbc", display: "block", marginBottom: 6 }}>生成风格</label>
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                 {[ ["jazz","爵士"], ["blues","蓝调"], ["classical","古典"], ["experimental","实验"] ].map(([s, l]) => (
                   <button key={s} style={css.pill(style === s)} onClick={() => setStyle(s)}>{l}</button>
@@ -1383,7 +1347,7 @@ export default function InspirationMuse({ embedded = false }) {
             </div>
             {/* Timbre */}
             <div>
-              <label style={{ fontSize: 13, color: "#a098b8", display: "block", marginBottom: 6 }}>音色</label>
+              <label style={{ fontSize: 13, color: "#9eacbc", display: "block", marginBottom: 6 }}>音色</label>
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                 {[ ["piano","钢琴"], ["synth","合成器"], ["organ","风琴"], ["strings","弦乐"] ].map(([t, l]) => (
                   <button key={t} style={css.pill(timbre === t)} onClick={() => setTimbre(t)}>{l}</button>
@@ -1392,13 +1356,13 @@ export default function InspirationMuse({ embedded = false }) {
             </div>
             {/* Tempo */}
             <div>
-              <label style={{ fontSize: 13, color: "#a098b8" }}>速度 (BPM): {tempo}</label>
+              <label style={{ fontSize: 13, color: "#9eacbc" }}>速度 (BPM): {tempo}</label>
               <input type="range" min={60} max={200} value={tempo}
                 onChange={e => setTempo(+e.target.value)} style={css.slider} />
             </div>
             {/* Bars */}
             <div>
-              <label style={{ fontSize: 13, color: "#a098b8" }}>生成小节数: {bars}</label>
+              <label style={{ fontSize: 13, color: "#9eacbc" }}>生成小节数: {bars}</label>
               <input type="range" min={4} max={16} value={bars}
                 onChange={e => setBars(+e.target.value)} style={css.slider} />
             </div>
@@ -1406,7 +1370,7 @@ export default function InspirationMuse({ embedded = false }) {
 
           {/* Generate button */}
           <div style={{ textAlign: "center", marginTop: 24 }}>
-            <button style={css.bigBtn("#c9a0ff")} onClick={handleGenerate}
+            <button style={css.bigBtn("#16c2a3")} onClick={handleGenerate}
               disabled={!melody.length || phase === "analyzing"}>
               {phase === "analyzing" ? (
                 <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -1423,43 +1387,43 @@ export default function InspirationMuse({ embedded = false }) {
           <>
             {/* Analysis */}
             <section style={css.section}>
-              <h2 style={css.sectionTitle}>⟐ 结果概览</h2>
+              <h2 style={css.sectionTitle}>结果概览</h2>
               {analysis && (
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }}>
-                  <span style={css.badge("#7eb8ff")}>调性: {analysis.key} {analysis.scale}</span>
-                  <span style={css.badge("#ffb0d0")}>风格: {style}</span>
-                  <span style={css.badge("#80e8c0")}>BPM: {tempo}</span>
-                  <span style={css.badge("#ffd080")}>长度: {bars} 小节</span>
-                  <span style={css.badge("#c9a0ff")}>音符数: {improvisation.filter(n => !n.isRest).length}</span>
-                  {parsedStaves.length > 1 && <span style={css.badge("#9fd2ff")}>已识别双谱表</span>}
+                  <span style={css.badge("#4c8dff")}>调性: {analysis.key} {analysis.scale}</span>
+                  <span style={css.badge("#f6b052")}>风格: {style}</span>
+                  <span style={css.badge("#16c2a3")}>BPM: {tempo}</span>
+                  <span style={css.badge("#9be36e")}>长度: {bars} 小节</span>
+                  <span style={css.badge("#9eacbc")}>音符数: {improvisation.filter(n => !n.isRest).length}</span>
+                  {parsedStaves.length > 1 && <span style={css.badge("#6ab7ff")}>已识别双谱表</span>}
                 </div>
               )}
               <div style={css.analysisBox}>
                 {isApiLoading ? (
-                  <span style={{ color: "#a098b8", animation: "pulse 1.5s infinite" }}>正在整理结果…</span>
+                  <span style={{ color: "#9eacbc", animation: "pulse 1.5s infinite" }}>正在整理结果…</span>
                 ) : apiAnalysis}
               </div>
             </section>
 
             {/* Generated Score */}
             <section style={css.section}>
-              <h2 style={css.sectionTitle}>⟐ 生成结果</h2>
+              <h2 style={css.sectionTitle}>生成结果</h2>
               <StaffNotation notes={improvisation} label="生成旋律 Generated Melody"
-                highlightIndex={playingWhat === "improv" ? highlightIdx : -1} color="#ffb0d0" />
+                highlightIndex={playingWhat === "improv" ? highlightIdx : -1} color="#f6b052" />
 
               {/* Waveform */}
               <WaveformViz isPlaying={isPlaying} />
 
               {/* Playback controls */}
               <div style={{ display: "flex", gap: 10, justifyContent: "center", marginTop: 16, flexWrap: "wrap" }}>
-                <button style={css.bigBtn("#7eb8ff")} onClick={() => play("original")}
+                <button style={css.bigBtn("#4c8dff")} onClick={() => play("original")}
                   disabled={isPlaying}>▶ 原始旋律</button>
-                <button style={css.bigBtn("#ffb0d0")} onClick={() => play("improv")}
+                <button style={css.bigBtn("#f6b052")} onClick={() => play("improv")}
                   disabled={isPlaying}>▶ 生成旋律</button>
-                <button style={css.bigBtn("#80e8c0")} onClick={() => play("both")}
+                <button style={css.bigBtn("#16c2a3")} onClick={() => play("both")}
                   disabled={isPlaying}>▶ 合并试听</button>
                 {isPlaying && (
-                  <button style={css.bigBtn("#ff8888")} onClick={stop}>⏹ 停止播放</button>
+                  <button style={css.bigBtn("#ff6b7a")} onClick={stop}>⏹ 停止播放</button>
                 )}
               </div>
               <div style={{ textAlign: "center", marginTop: 12 }}>

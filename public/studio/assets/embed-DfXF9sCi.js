@@ -1,0 +1,1 @@
+import{i as e,n as t,r as n,t as r}from"./App-DP8Et6aa.js";var i=e(),a=n(),o=t(),s=document.getElementById(`studio-root`);s&&(0,a.createRoot)(s).render((0,o.jsx)(i.StrictMode,{children:(0,o.jsx)(r,{embedded:!0})}));
